@@ -1,6 +1,7 @@
 package com.example.domoycoursework.services
 
 import com.example.domoycoursework.enums.VerificationStatus
+import com.example.domoycoursework.models.Flat
 import com.example.domoycoursework.models.User
 import com.example.domoycoursework.models.VerificationRequest
 import com.example.domoycoursework.repos.UserRepository
@@ -22,12 +23,12 @@ class UserService(
         return userRepository.findUserByEmail(email)
     }
 
-    fun setAdditionalUserData(verificationRequest: VerificationRequest): User {
+    fun setAdditionalUserData(verificationRequest: VerificationRequest, flat: Flat): User {
         return userRepository.save(verificationRequest.user.apply {
             this.verificationStatus = VerificationStatus.VERIFIED
             this.firstName = verificationRequest.firstName
             this.lastName = verificationRequest.lastName
-            this.cadastralNumber = verificationRequest.cadastralNumber
+            this.flat = flat
         })
     }
 

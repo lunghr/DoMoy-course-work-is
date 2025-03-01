@@ -33,5 +33,4 @@ class AdminService @Autowired constructor(
         return adminRepository.findByEmail(email)
     }
 
-
 }

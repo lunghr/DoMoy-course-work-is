@@ -9,6 +9,8 @@ import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -37,8 +39,9 @@ class User(
     @Column(name = "password", nullable = false)
     private var password: String,
 
-    @Column(name = "cadastral_number", nullable = true)
-    var cadastralNumber: Long? = null,
+    @OneToOne
+    @JoinColumn(name = "flat_id", nullable = true)
+    var flat: Flat? = null,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false) var role: Role = Role.ROLE_USER,

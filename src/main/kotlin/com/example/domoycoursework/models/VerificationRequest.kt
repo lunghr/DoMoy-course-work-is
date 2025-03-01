@@ -21,6 +21,12 @@ class VerificationRequest(
     @Column(name = "cadastral_number", nullable = false)
     var cadastralNumber: Long,
 
+    @Column(name = "address", nullable = false)
+    var address: String,
+
+    @Column(name = "flat_number", nullable = false)
+    var flatNumber: Int,
+
     @OneToOne
     @JoinColumn(name = "user_id")
     var user: User,

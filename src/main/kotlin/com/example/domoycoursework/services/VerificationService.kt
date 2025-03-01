@@ -15,7 +15,8 @@ class VerificationService(
     private val userService: UserService,
     private val adminService: AdminService,
     private val jwtService: JwtService,
-    private val verificationRequestRepository: VerificationRequestRepository
+    private val verificationRequestRepository: VerificationRequestRepository,
+    private val houseAndFlatService: HouseAndFlatService
 ) {
 
     fun processVerificationRequest(verificationRequestDto: VerificationRequestDto, token: String): VerificationRequest {
@@ -30,6 +31,8 @@ class VerificationService(
             it.firstName = verificationRequestDto.firstName
             it.lastName = verificationRequestDto.lastName
             it.cadastralNumber = verificationRequestDto.cadastralNumber
+            it.address = verificationRequestDto.address
+            it.flatNumber = verificationRequestDto.flatNumber
             verificationRequestRepository.save(it)
         } ?: VerificationRequest(
             id = 0,
@@ -37,7 +40,9 @@ class VerificationService(
             status = RequestStatus.PENDING,
             firstName = verificationRequestDto.firstName,
             lastName = verificationRequestDto.lastName,
-            cadastralNumber = verificationRequestDto.cadastralNumber
+            cadastralNumber = verificationRequestDto.cadastralNumber,
+            address = verificationRequestDto.address,
+            flatNumber = verificationRequestDto.flatNumber
         ).also { verificationRequestRepository.save(it) }
     }
 
@@ -50,7 +55,7 @@ class VerificationService(
             }
         } ?: throw NotFoundException("Verification request not found")
         verificationRequest.status = RequestStatus.ACCEPTED
-        userService.setAdditionalUserData(verificationRequest)
+        userService.setAdditionalUserData(verificationRequest, houseAndFlatService.createFlat(verificationRequest))
         return verificationRequest
     }
 

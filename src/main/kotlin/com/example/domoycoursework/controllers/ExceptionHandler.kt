@@ -43,4 +43,9 @@ class ExceptionHandler {
     fun handleNotFoundException(e: NotFoundException): ResponseEntity<String> {
         return ResponseEntity.status(404).body(e.message)
     }
+
+    @ExceptionHandler(InvalidUserData::class)
+    fun handleInvalidUserData(e: InvalidUserData): ResponseEntity<String> {
+        return ResponseEntity.status(400).body(e.message)
+    }
 }
