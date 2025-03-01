@@ -1,6 +1,7 @@
 package com.example.domoycoursework.controllers
 
 import com.example.domoycoursework.dto.VerificationRequestDto
+import com.example.domoycoursework.models.TSJRequest
 import com.example.domoycoursework.models.VerificationRequest
 import com.example.domoycoursework.services.VerificationService
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -30,4 +31,20 @@ class VerificationController (
     fun rejectVerificationRequest(@PathVariable id: Long): VerificationRequest {
         return verificationService.declineVerificationRequest(id)
     }
+
+    @PostMapping("/TSJ-request")
+    fun processTSJRequest(@RequestHeader("Authorization") token: String): TSJRequest {
+        return verificationService.processTSJRequest(token)
+    }
+
+    @PostMapping("admin/approve-TSJ/{id}")
+    fun approveTSJRequest(@PathVariable id: Long): TSJRequest {
+        return verificationService.approveTSJRequest(id)
+    }
+
+    @PostMapping("admin/decline-TSJ/{id}")
+    fun rejectTSJRequest(@PathVariable id: Long): TSJRequest {
+        return verificationService.declineTSJRequest(id)
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.domoycoursework.services
 
+import com.example.domoycoursework.enums.Role
 import com.example.domoycoursework.enums.VerificationStatus
 import com.example.domoycoursework.models.Flat
 import com.example.domoycoursework.models.User
@@ -29,6 +30,12 @@ class UserService(
             this.firstName = verificationRequest.firstName
             this.lastName = verificationRequest.lastName
             this.flat = flat
+        })
+    }
+
+    fun changeRole(user: User, role: Role): User {
+        return userRepository.save(user.apply {
+            this.role = role
         })
     }
 
