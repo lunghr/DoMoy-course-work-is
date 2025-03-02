@@ -1,6 +1,6 @@
 package com.example.domoycoursework.services
 
-import com.example.domoycoursework.exceptions.InvalidUserData
+import com.example.domoycoursework.exceptions.InvalidUserDataException
 import com.example.domoycoursework.models.Flat
 import com.example.domoycoursework.models.House
 import com.example.domoycoursework.models.VerificationRequest
@@ -16,7 +16,7 @@ class HouseAndFlatService(
 
     fun createHouse(address: String): House {
         return houseRepository.findHouseByAddress(address)
-            ?.let { throw InvalidUserData("House already exist in data base") } ?: houseRepository.save(
+            ?.let { throw InvalidUserDataException("House already exist in data base") } ?: houseRepository.save(
             House(
                 id = 0,
                 address = address
@@ -29,7 +29,7 @@ class HouseAndFlatService(
             flatRepository.findFlatByHouseAndFlatNumber(
                 it,
                 verificationRequest.flatNumber
-            )?.let { throw InvalidUserData("Flat already owned") } ?: flatRepository.save(
+            )?.let { throw InvalidUserDataException("Flat already owned") } ?: flatRepository.save(
                 Flat(
                     id = 0,
                     house = it,
@@ -38,10 +38,10 @@ class HouseAndFlatService(
                     owner = verificationRequest.user
                 )
             )
-        } ?: throw InvalidUserData("Address not found")
+        } ?: throw InvalidUserDataException("Address not found")
     }
 
     fun getFlatsByHouse(id:Long): List<Int> {
-        return houseRepository.findHouseById(id)?.flats?.map { it.flatNumber } ?: throw InvalidUserData("House not found")
+        return houseRepository.findHouseById(id)?.flats?.map { it.flatNumber } ?: throw InvalidUserDataException("House not found")
     }
 }

@@ -40,3 +40,22 @@ services:
       - "13228:8080"
     environment:
       ADMINER_DEFAULT_SERVER: database_cw
+
+  minio:
+    image: quay.io/minio/minio
+    container_name: minio_cw
+    ports:
+      - "9000:9000"
+      - "9090:9090"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+    command: server /data --console-address ":9090"
+    volumes:
+      - minio_data:/data
+    env_file:
+      - .env
+
+
+volumes:
+    minio_data:

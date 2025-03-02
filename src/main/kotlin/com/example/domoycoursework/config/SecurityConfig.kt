@@ -65,7 +65,8 @@ class SecurityConfig (
                     .requestMatchers("/ws/**").permitAll()
                     .requestMatchers("/ws/**").permitAll()
                     .requestMatchers("/notifications/**").permitAll()
-                    .requestMatchers("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll()
+                    .requestMatchers("/swagger-ui/**", "/swagger-resources/", "/v3/api-docs/**").permitAll()
+                    .requestMatchers("/posts/**").hasAnyRole("ADMIN", "TSJ")
                     .requestMatchers("/admin/**", "/verification/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
             }

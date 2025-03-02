@@ -1,5 +1,6 @@
 package com.example.domoycoursework.models
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.*
 
 
@@ -23,5 +24,6 @@ class Flat (
 
     @OneToOne
     @JoinColumn(name = "owner_id", nullable = false)
+    @JsonBackReference
     var owner: User
 )

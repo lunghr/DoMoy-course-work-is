@@ -14,28 +14,28 @@ class ExceptionHandler {
         return ResponseEntity.status(404).body(e.message)
     }
 
-    @ExceptionHandler(EmailAlreadyInUse::class)
-    fun handleEmailAlreadyInUse(e: EmailAlreadyInUse): ResponseEntity<String> {
+    @ExceptionHandler(EmailAlreadyInUseException::class)
+    fun handleEmailAlreadyInUse(e: EmailAlreadyInUseException): ResponseEntity<String> {
         return ResponseEntity.status(409).body(e.message)
     }
 
-    @ExceptionHandler(PhoneNumberAlreadyInUse::class)
-    fun handlePhoneNumberAlreadyInUse(e: PhoneNumberAlreadyInUse): ResponseEntity<String> {
+    @ExceptionHandler(PhoneNumberAlreadyInUseException::class)
+    fun handlePhoneNumberAlreadyInUse(e: PhoneNumberAlreadyInUseException): ResponseEntity<String> {
         return ResponseEntity.status(409).body(e.message)
     }
 
-    @ExceptionHandler(InvalidSecretKey::class)
-    fun handleInvalidSecretKey(e: InvalidSecretKey): ResponseEntity<String> {
+    @ExceptionHandler(InvalidSecretKeyException::class)
+    fun handleInvalidSecretKey(e: InvalidSecretKeyException): ResponseEntity<String> {
         return ResponseEntity.status(401).body(e.message)
     }
 
-    @ExceptionHandler(UserAlreadyVerified :: class)
-    fun handleUserAlreadyVerified(e: UserAlreadyVerified): ResponseEntity<String> {
+    @ExceptionHandler(UserAlreadyVerifiedException :: class)
+    fun handleUserAlreadyVerified(e: UserAlreadyVerifiedException): ResponseEntity<String> {
         return ResponseEntity.status(409).body(e.message)
     }
 
-    @ExceptionHandler(RequestAlreadyInWork::class)
-    fun handleRequestAlreadyInWork(e: RequestAlreadyInWork): ResponseEntity<String> {
+    @ExceptionHandler(RequestAlreadyInWorkException::class)
+    fun handleRequestAlreadyInWork(e: RequestAlreadyInWorkException): ResponseEntity<String> {
         return ResponseEntity.status(409).body(e.message)
     }
 
@@ -44,8 +44,18 @@ class ExceptionHandler {
         return ResponseEntity.status(404).body(e.message)
     }
 
-    @ExceptionHandler(InvalidUserData::class)
-    fun handleInvalidUserData(e: InvalidUserData): ResponseEntity<String> {
+    @ExceptionHandler(InvalidUserDataException::class)
+    fun handleInvalidUserData(e: InvalidUserDataException): ResponseEntity<String> {
         return ResponseEntity.status(400).body(e.message)
+    }
+
+    @ExceptionHandler(FileException::class)
+    fun handleFileUploadError(e: FileException): ResponseEntity<String> {
+        return ResponseEntity.status(400).body(e.message)
+    }
+
+    @ExceptionHandler(NoPermissionException::class)
+    fun handleNoPermissionException(e: NoPermissionException): ResponseEntity<String> {
+        return ResponseEntity.status(403).body(e.message)
     }
 }

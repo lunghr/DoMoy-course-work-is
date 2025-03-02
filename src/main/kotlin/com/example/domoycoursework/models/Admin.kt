@@ -32,7 +32,7 @@ class Admin(
 
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
-    private var role: Role = Role.ROLE_ADMIN
+    var role: Role = Role.ROLE_ADMIN
 
     ) : UserDetails {
 

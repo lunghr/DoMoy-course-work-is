@@ -36,7 +36,7 @@ dependencies {
 	implementation("org.apache.poi:poi-ooxml:5.2.3")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 	implementation("io.springfox:springfox-swagger-ui:3.0.0")
-	implementation("io.github.cdimascio:dotenv-java:3.0.0")
+	implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 	runtimeOnly("org.postgresql:postgresql")

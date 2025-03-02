@@ -1,6 +1,8 @@
 package com.example.domoycoursework.controllers
 
+import com.example.domoycoursework.dto.TSJResponseDto
 import com.example.domoycoursework.dto.VerificationRequestDto
+import com.example.domoycoursework.dto.VerificationResponseDto
 import com.example.domoycoursework.models.TSJRequest
 import com.example.domoycoursework.models.VerificationRequest
 import com.example.domoycoursework.services.VerificationService
@@ -18,32 +20,32 @@ class VerificationController (
 ){
 
     @PostMapping("/request")
-    fun processVerificationRequest(@RequestHeader("Authorization") token: String, @Valid @RequestBody verificationRequestDto: VerificationRequestDto): VerificationRequest {
+    fun processVerificationRequest(@RequestHeader("Authorization") token: String, @Valid @RequestBody verificationRequestDto: VerificationRequestDto): VerificationResponseDto {
         return verificationService.processVerificationRequest(verificationRequestDto, token)
     }
 
     @PostMapping("admin/approve/{id}")
-    fun approveVerificationRequest(@PathVariable id: Long): VerificationRequest {
+    fun approveVerificationRequest(@PathVariable id: Long): VerificationResponseDto {
        return verificationService.approveVerificationRequest(id)
     }
 
     @PostMapping("admin/decline/{id}")
-    fun rejectVerificationRequest(@PathVariable id: Long): VerificationRequest {
+    fun rejectVerificationRequest(@PathVariable id: Long): VerificationResponseDto {
         return verificationService.declineVerificationRequest(id)
     }
 
     @PostMapping("/TSJ-request")
-    fun processTSJRequest(@RequestHeader("Authorization") token: String): TSJRequest {
+    fun processTSJRequest(@RequestHeader("Authorization") token: String): TSJResponseDto {
         return verificationService.processTSJRequest(token)
     }
 
     @PostMapping("admin/approve-TSJ/{id}")
-    fun approveTSJRequest(@PathVariable id: Long): TSJRequest {
+    fun approveTSJRequest(@PathVariable id: Long): TSJResponseDto {
         return verificationService.approveTSJRequest(id)
     }
 
     @PostMapping("admin/decline-TSJ/{id}")
-    fun rejectTSJRequest(@PathVariable id: Long): TSJRequest {
+    fun rejectTSJRequest(@PathVariable id: Long): TSJResponseDto {
         return verificationService.declineTSJRequest(id)
     }
 

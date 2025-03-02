@@ -1,10 +1,12 @@
 package com.example.domoycoursework.models
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import jakarta.persistence.*
 
 
 @Entity
 @Table(name = "houses")
+@JsonIgnoreProperties
 class House(
     @Id
     @Column(name = "id")

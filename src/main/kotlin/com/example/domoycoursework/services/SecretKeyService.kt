@@ -3,7 +3,7 @@ package com.example.domoycoursework.services
 import com.example.domoycoursework.models.SecretKey
 import com.example.domoycoursework.repos.SecretKeyRepository
 import com.example.domoycoursework.models.Admin
-import com.example.domoycoursework.exceptions.InvalidSecretKey
+import com.example.domoycoursework.exceptions.InvalidSecretKeyException
 import org.springframework.stereotype.Service
 import java.util.UUID
 
@@ -24,10 +24,10 @@ class SecretKeyService(
 
     fun useSecretKey(key: String, admin: Admin) {
         secretKeyRepository.findSecretKeyByKey(key)?.let {
-            if (it.isUsed == true) throw InvalidSecretKey("Secret key already used") else it.isUsed = true
+            if (it.isUsed == true) throw InvalidSecretKeyException("Secret key already used") else it.isUsed = true
             it.admin = admin
             secretKeyRepository.save(it)
         }
-            ?: throw InvalidSecretKey("Secret key not found")
+            ?: throw InvalidSecretKeyException("Secret key not found")
     }
 }

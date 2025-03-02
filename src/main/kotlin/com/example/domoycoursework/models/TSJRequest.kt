@@ -10,7 +10,7 @@ class TSJRequest (
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val id: Long,
+    val id: Long,
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
