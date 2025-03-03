@@ -1,6 +1,7 @@
 package com.example.domoycoursework.services
 
 import com.example.domoycoursework.exceptions.InvalidUserDataException
+import com.example.domoycoursework.exceptions.NotFoundException
 import com.example.domoycoursework.models.Flat
 import com.example.domoycoursework.models.House
 import com.example.domoycoursework.models.VerificationRequest
@@ -41,7 +42,12 @@ class HouseAndFlatService(
         } ?: throw InvalidUserDataException("Address not found")
     }
 
-    fun getFlatsByHouse(id:Long): List<Int> {
-        return houseRepository.findHouseById(id)?.flats?.map { it.flatNumber } ?: throw InvalidUserDataException("House not found")
+    fun getFlatsByHouse(id: Long): List<Int> {
+        return houseRepository.findHouseById(id)?.flats?.map { it.flatNumber }
+            ?: throw InvalidUserDataException("House not found")
+    }
+
+    fun getHouseById(id: Long): House {
+        return houseRepository.findHouseById(id) ?: throw NotFoundException("House not found")
     }
 }
