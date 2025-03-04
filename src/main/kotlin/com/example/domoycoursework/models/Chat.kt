@@ -1,23 +1,20 @@
 package com.example.domoycoursework.models
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 
-
 @Entity
-@Table(name = "houses")
-@JsonIgnoreProperties
-class House(
+@Table(name = "chats")
+class Chat (
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long,
 
-    @Column(name = "address", nullable = false)
-    var address: String,
+    @Column(name = "name", nullable = false)
+    var name: String,
 
-    @OneToMany(mappedBy = "house")
+    @OneToMany(mappedBy = "chat")
     @JsonManagedReference
-    var flats: List<Flat> = mutableListOf()
+    var messages: List<Message> = mutableListOf()
 )

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .chat-box {
+            width: 400px;
+            height: 300px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            overflow-y: scroll;
+        }
+        .message-input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .send-button {
+            padding: 10px 20px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>WebSocket Chat</h1>
+
+<div class="chat-box" id="chatBox"></div>
+
+<input type="text" id="messageInput" class="message-input" placeholder="Enter message..."/>
+<button class="send-button" id="sendButton">Send</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+<script>
+    // Токен (предположим, что он уже получен)
+    const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsYWxhYWxAZ21haWwuY29tIiwicm9sZSI6IlJPTEVfVVNFUiIsImlkIjoxLCJlbWFpbCI6ImxhbGFhbEBnbWFpbC5jb20iLCJpYXQiOjE3NDEwNDg1MDYsImV4cCI6MTc0MTA4NDUwNn0.e3CY5qgbRdMfbvfXGuN1uz4QQKS52sbVS4wvkTZtbeU'
+    // Устанавливаем подключение к WebSocket
+    const socket = new SockJS('http://localhost:8080/ws/chat');
+    console.log(socket)
+    if (!socket) {
+        console.log('Socket is not connected');
+    }
+    const stompClient = Stomp.over(socket);
+    console.log(stompClient)
+
+    const headers = { Authorization: 'Bearer ' + token };
+    console.log(headers);
+
+    // Подключаемся к серверу
+    stompClient.connect(headers, function(frame) {
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic/chat', function(messageOutput) {
+            const chatBox = document.getElementById('chatBox');
+            chatBox.innerHTML += `<div>${messageOutput.body}</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+    });
+
+    // Отправка сообщений
+    document.getElementById('sendButton').addEventListener('click', function() {
+        const message = document.getElementById('messageInput').value;
+
+        if (message) {
+            stompClient.send('/app/chat.sendMessage', {}, JSON.stringify({ text: message }));
+            document.getElementById('messageInput').value = '';  // Очищаем поле ввода
+        }
+    });
+</script>
+
+</body>
+</html>

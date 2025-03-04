@@ -22,17 +22,20 @@ class Admin(
     var email: String,
 
     @Column(name = "first_name", nullable = true)
-    private var firstName: String? = "",
+    var firstName: String? = "",
 
     @Column(name = "last_name", nullable = true)
-    private var lastName: String? = "",
+    var lastName: String? = "",
 
     @Column(name = "password", nullable = false)
     private var password: String,
 
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
-    var role: Role = Role.ROLE_ADMIN
+    var role: Role = Role.ROLE_ADMIN,
+
+    @Column(name = "chat_name", nullable = true)
+    var chatName: String? = null
 
     ) : UserDetails {
 

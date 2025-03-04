@@ -30,6 +30,7 @@ class UserService(
             this.firstName = verificationRequest.firstName
             this.lastName = verificationRequest.lastName
             this.flat = flat
+            this.chatName = "${this.firstName} ${this.lastName}, ${flat.flatNumber}"
         })
     }
 

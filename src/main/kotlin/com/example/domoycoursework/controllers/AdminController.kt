@@ -1,10 +1,13 @@
 package com.example.domoycoursework.controllers
 
+import com.example.domoycoursework.dto.AdminAdditionalDataDto
 import com.example.domoycoursework.dto.EmergencyNotificationDto
 import com.example.domoycoursework.dto.HouseCreationRequestDto
+import com.example.domoycoursework.models.Admin
 import com.example.domoycoursework.models.EmergencyNotification
 import com.example.domoycoursework.models.Flat
 import com.example.domoycoursework.models.House
+import com.example.domoycoursework.services.AdminService
 import com.example.domoycoursework.services.EmergencyNotificationService
 import com.example.domoycoursework.services.HouseAndFlatService
 import com.example.domoycoursework.services.SecretKeyService
@@ -22,11 +25,12 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/admin")
 @CrossOrigin(origins = ["*"])
-@Tag(name = "Secret Keys Creation")
+@Tag(name = "Admin Controller")
 class AdminController(
     private val secretKeyService: SecretKeyService,
     private val houseAndFlatService: HouseAndFlatService,
-    private val emergencyNotificationService: EmergencyNotificationService
+    private val emergencyNotificationService: EmergencyNotificationService,
+    private val adminService: AdminService
 ) {
 
     @PostMapping("/secret-keys/create")
@@ -50,5 +54,13 @@ class AdminController(
         @RequestHeader("Authorization") token: String
     ): EmergencyNotification {
         return emergencyNotificationService.createEmergencyNotification(emergencyNotificationDto, token)
+    }
+
+    @PostMapping("/data")
+    fun setAdditionalAdminData(
+        @RequestBody adminAdditionalDataDto: AdminAdditionalDataDto,
+        @RequestHeader("Authorization") token: String
+    ): Admin {
+        return adminService.setAdditionalAdminData(adminAdditionalDataDto, token)
     }
 }

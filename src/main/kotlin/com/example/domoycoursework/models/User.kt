@@ -48,7 +48,10 @@ class User(
 
     @Column(name = "verification status", nullable = false)
     @Enumerated(EnumType.STRING)
-    var verificationStatus: VerificationStatus = VerificationStatus.UNVERIFIED
+    var verificationStatus: VerificationStatus = VerificationStatus.UNVERIFIED,
+
+    @Column(name = "chat_name", nullable = true)
+    var chatName: String? = null
 ) : UserDetails {
     // Return list of roles
     override fun getAuthorities(): Collection<GrantedAuthority> {

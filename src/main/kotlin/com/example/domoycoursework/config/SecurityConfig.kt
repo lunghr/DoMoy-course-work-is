@@ -24,11 +24,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig (
+class SecurityConfig(
     private var userService: UserService,
     private var jwtService: JwtService,
     private var adminService: AdminService
-){
+) {
 
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
@@ -63,16 +63,19 @@ class SecurityConfig (
                 authorize
                     .requestMatchers("/auth/**").permitAll()
                     .requestMatchers("/ws/**").permitAll()
-                    .requestMatchers("/ws/**").permitAll()
+                    .requestMatchers("/index.html").permitAll()
                     .requestMatchers("/notifications/**").permitAll()
                     .requestMatchers("/swagger-ui/**", "/swagger-resources/", "/v3/api-docs/**").permitAll()
                     .requestMatchers("/posts/**").hasAnyRole("ADMIN", "TSJ")
-                    .requestMatchers("/admin/**", "/verification/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/admin/**", "/verification/admin/**", "/application/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
             }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authenticationProvider(authenticationProvider())
-            .addFilterBefore(JwtAuthFilter(jwtService, userService, adminService), UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(
+                JwtAuthFilter(jwtService, userService, adminService),
+                UsernamePasswordAuthenticationFilter::class.java
+            )
         return http.build()
     }
 

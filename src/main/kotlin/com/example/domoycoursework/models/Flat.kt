@@ -14,6 +14,7 @@ class Flat (
 
     @ManyToOne
     @JoinColumn(name = "house_id", nullable = false)
+    @JsonBackReference
     var house: House,
 
     @Column(name = "number", nullable = false)
