@@ -17,16 +17,17 @@ class SecretKeyService(
         val key = UUID.randomUUID().toString().substring(0, 12)
         secretKeyRepository.findSecretKeyByKey(key)?.let {
             createSecretKey()
-        } ?: secretKeyRepository.save(SecretKey(id = 0L, key = key))
+        } ?: secretKeyRepository.save(key)
 
         return key
     }
 
     fun useSecretKey(key: String, admin: Admin) {
         secretKeyRepository.findSecretKeyByKey(key)?.let {
-            if (it.isUsed == true) throw InvalidSecretKeyException("Secret key already used") else it.isUsed = true
-            it.admin = admin
-            secretKeyRepository.save(it)
+            if (it.isUsed == true) throw InvalidSecretKeyException("Secret key already used") else secretKeyRepository.useSecretKey(
+                key,
+                admin.id
+            )
         }
             ?: throw InvalidSecretKeyException("Secret key not found")
     }

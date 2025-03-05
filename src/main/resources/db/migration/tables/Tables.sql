@@ -2,6 +2,7 @@ DROP  TABLE IF EXISTS houses CASCADE ;
 DROP  TABLE IF EXISTS flats CASCADE ;
 DROP TABLE IF EXISTS verification_requests CASCADE ;
 DROP TABLE IF EXISTS tsj_requests CASCADE ;
+DROP TABLE IF EXISTS secret_keys CASCADE ;
 -- DROP TABLE IF EXISTS users;
 
 CREATE TABLE houses (
@@ -9,6 +10,8 @@ CREATE TABLE houses (
     address VARCHAR(255) NOT NULL
 );
 
+
+-- change user_id on id
 CREATE TABLE flats (
     id SERIAL PRIMARY KEY,
     house_id INT,
@@ -21,6 +24,7 @@ CREATE TABLE flats (
         FOREIGN KEY (owner_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
+-- change user_id on id
 CREATE TABLE verification_requests(
     id SERIAL PRIMARY KEY,
     first_name VARCHAR(255) NOT NULL,
@@ -40,6 +44,16 @@ CREATE TABLE tsj_requests(
     status VARCHAR(255) NOT NULL,
     CONSTRAINT fk_tsj_requests_user
         FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+-- change admin_id on id
+CREATE TABLE  secret_keys(
+    id SERIAL PRIMARY KEY,
+    key VARCHAR(12) NOT NULL,
+    is_used BOOLEAN NOT NULL,
+    admin_id INT,
+    CONSTRAINT fk_secret_keys_admin
+        FOREIGN KEY (admin_id) REFERENCES admins(admin_id) ON DELETE CASCADE
 );
 
 -- CREATE TABLE users (

@@ -5,20 +5,9 @@ import jakarta.persistence.*
 import jakarta.validation.constraints.Size
 
 
-@Entity
-@Table(name = "secret_keys")
 data class SecretKey(
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val id: Long,
-
-    @Column(name = "key", nullable = false)
-    @Size(min=12, max = 12, message = "Secret key must be 12 characters long")
+    private val id: Int,
     var key: String,
-
-    @Column(name = "is_used", nullable = false) var isUsed: Boolean ?= false,
-
-    @OneToOne
-    @JoinColumn(name = "admin_id", nullable = true) var admin: Admin? = null
+    var isUsed: Boolean ?= false,
+    var adminId: Int? = null
 )

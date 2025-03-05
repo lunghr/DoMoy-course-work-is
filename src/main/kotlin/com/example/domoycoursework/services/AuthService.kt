@@ -44,7 +44,7 @@ class AuthService(
             password = passwordEncoder.encode(request.password)
         )
         val key = SecretKey(
-            id = 0L,
+            id = 0,
             key = request.secretKey
         )
 
