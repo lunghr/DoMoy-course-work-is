@@ -25,12 +25,12 @@ class VerificationController (
     }
 
     @PostMapping("admin/approve/{id}")
-    fun approveVerificationRequest(@PathVariable id: Long): VerificationResponseDto {
+    fun approveVerificationRequest(@PathVariable id: Int): VerificationResponseDto {
        return verificationService.approveVerificationRequest(id)
     }
 
     @PostMapping("admin/decline/{id}")
-    fun rejectVerificationRequest(@PathVariable id: Long): VerificationResponseDto {
+    fun rejectVerificationRequest(@PathVariable id: Int): VerificationResponseDto {
         return verificationService.declineVerificationRequest(id)
     }
 

@@ -10,7 +10,7 @@ class TSJResponseDto (
     val id: Long,
 
     @Schema(description = "User Id", example = "1")
-    val userId: Long,
+    val userId: Int,
 
     @Schema(description = "Status", example = "ACCEPTED")
     val status: RequestStatus

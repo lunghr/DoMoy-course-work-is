@@ -32,8 +32,7 @@ class HouseAndFlatService(
                     houseId = it.id,
                     flatNumber = verificationRequest.flatNumber,
                     cadastralNumber = verificationRequest.cadastralNumber,
-                    //TODO: change to real user id
-                    ownerId = 1
+                    ownerId = verificationRequest.userId
                 )
             )
         } ?: throw InvalidUserDataException("Address not found")

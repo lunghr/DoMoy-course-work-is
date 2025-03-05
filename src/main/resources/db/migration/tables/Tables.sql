@@ -1,5 +1,6 @@
-DROP  TABLE IF EXISTS houses;
-DROP  TABLE IF EXISTS flats;
+DROP  TABLE IF EXISTS houses CASCADE ;
+DROP  TABLE IF EXISTS flats CASCADE ;
+DROP TABLE IF EXISTS verification_requests CASCADE ;
 -- DROP TABLE IF EXISTS users;
 
 CREATE TABLE houses (
@@ -18,6 +19,19 @@ CREATE TABLE flats (
     CONSTRAINT fk_flats_user
         FOREIGN KEY (owner_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+
+CREATE TABLE verification_requests(
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    cadastral_number VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    flat_number INT NOT NULL,
+    user_id INT NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    CONSTRAINT fk_verification_requests_user
+        FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+)
 
 -- CREATE TABLE users (
 --     id SERIAL PRIMARY KEY,

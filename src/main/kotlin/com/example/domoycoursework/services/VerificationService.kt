@@ -36,26 +36,11 @@ class VerificationService(
             if (it.status != RequestStatus.DECLINED) {
                 throw RequestAlreadyInWorkException("Verification request is not declined")
             }
-            it.status = RequestStatus.PENDING
-            it.firstName = verificationRequestDto.firstName
-            it.lastName = verificationRequestDto.lastName
-            it.cadastralNumber = verificationRequestDto.cadastralNumber
-            it.address = verificationRequestDto.address
-            it.flatNumber = verificationRequestDto.flatNumber
-            verificationRequestRepository.save(it)
-        } ?: VerificationRequest(
-            id = 0,
-            user = user,
-            status = RequestStatus.PENDING,
-            firstName = verificationRequestDto.firstName,
-            lastName = verificationRequestDto.lastName,
-            cadastralNumber = verificationRequestDto.cadastralNumber,
-            address = verificationRequestDto.address,
-            flatNumber = verificationRequestDto.flatNumber
-        ).also { verificationRequestRepository.save(it) })
+            verificationRequestRepository.save(verificationRequestDto, it.id)
+        } ?: verificationRequestRepository.createVerificationRequest(verificationRequestDto, user))
     }
 
-    fun approveVerificationRequest(id: Long): VerificationResponseDto {
+    fun approveVerificationRequest(id: Int): VerificationResponseDto {
         val verificationRequest = verificationRequestRepository.findVerificationRequestById(id)?.let {
             if (it.status == RequestStatus.PENDING) {
                 it
@@ -63,16 +48,24 @@ class VerificationService(
                 throw RequestAlreadyInWorkException("Verification request is not pending")
             }
         } ?: throw NotFoundException("Verification request not found")
-        verificationRequest.status = RequestStatus.ACCEPTED
         userService.setAdditionalUserData(verificationRequest, houseAndFlatService.createFlat(verificationRequest))
-        return createVerificationResponseDto(verificationRequestRepository.save(verificationRequest))
+        return createVerificationResponseDto(
+            verificationRequestRepository.changeVerificationRequestStatus(
+                id,
+                RequestStatus.ACCEPTED
+            )
+        )
     }
 
-    fun declineVerificationRequest(id: Long): VerificationResponseDto {
+    fun declineVerificationRequest(id: Int): VerificationResponseDto {
         return verificationRequestRepository.findVerificationRequestById(id)?.let {
             if (it.status == RequestStatus.PENDING) {
-                it.status = RequestStatus.DECLINED
-                createVerificationResponseDto(verificationRequestRepository.save(it))
+                createVerificationResponseDto(
+                    verificationRequestRepository.changeVerificationRequestStatus(
+                        id,
+                        RequestStatus.DECLINED
+                    )
+                )
             } else {
                 throw RequestAlreadyInWorkException("Verification request is not pending")
             }
@@ -131,7 +124,7 @@ class VerificationService(
     fun createVerificationResponseDto(verificationRequest: VerificationRequest): VerificationResponseDto {
         return VerificationResponseDto(
             id = verificationRequest.id,
-            userId = verificationRequest.user.id,
+            userId = verificationRequest.userId,
             status = verificationRequest.status,
             firstName = verificationRequest.firstName,
             lastName = verificationRequest.lastName,

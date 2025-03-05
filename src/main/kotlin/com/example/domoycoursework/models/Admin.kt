@@ -13,7 +13,7 @@ class Admin(
     @Id
     @Column(name = "admin_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val id: Long,
+    val id: Int,
 
     @Column(name = "phone_number", nullable = false)
     var phoneNumber: String,

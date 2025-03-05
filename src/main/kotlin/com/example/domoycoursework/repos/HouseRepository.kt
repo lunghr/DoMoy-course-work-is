@@ -13,33 +13,33 @@ class HouseRepository(
     private var jdbcTemplate: JdbcTemplate
 ) {
     fun save(address: String): House {
-        val savedHouse = jdbcTemplate.query("SELECT * FROM create_house(?)", arrayOf(address)){rs, _ ->
-            House(
-                id = rs.getInt("id"),
-                address = rs.getString("address")
-            )
+        val savedHouse = jdbcTemplate.query("SELECT * FROM create_house(?)", arrayOf(address)) { rs, _ ->
+            toHouse(rs)
         }.firstOrNull()
         println(savedHouse)
         return savedHouse ?: throw InvalidUserDataException("House already exist in data base")
     }
 
 
-    fun findHouseByAddress(address: String): House? = jdbcTemplate.query("SELECT * FROM find_house_by_address(?)", arrayOf(address)){rs, _ ->
-        House(
+    fun findHouseByAddress(address: String): House? =
+        jdbcTemplate.query("SELECT * FROM find_house_by_address(?)", arrayOf(address)) { rs, _ ->
+            toHouse(rs)
+        }.firstOrNull()
+
+    fun findHouseById(id: Int): House? = jdbcTemplate.query("SELECT * FROM find_house_by_id(?)", arrayOf(id)) { rs, _ ->
+       toHouse(rs)
+    }.firstOrNull()
+
+    fun findFlatsByHouseId(id: Int): List<Int> =
+        jdbcTemplate.query("SELECT * FROM find_flats_by_house_id(?)", arrayOf(id)) { rs, _ ->
+            rs.getInt("flat_number")
+        }
+
+    fun toHouse(rs: java.sql.ResultSet): House {
+        return House(
             id = rs.getInt("id"),
             address = rs.getString("address")
         )
-    }.firstOrNull()
-
-    fun findHouseById(id: Int): House? = jdbcTemplate.query("SELECT * FROM find_house_by_id(?)", arrayOf(id)){rs, _ ->
-        House(
-            id = rs.getInt("id"),
-            address = rs.getString("address")
-        )
-    }.firstOrNull()
-
-    fun findFlatsByHouseId(id: Int): List<Int> = jdbcTemplate.query("SELECT * FROM find_flats_by_house_id(?)", arrayOf(id)){rs, _ ->
-        rs.getInt("flat_number")
     }
 
 }

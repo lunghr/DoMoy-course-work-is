@@ -22,7 +22,7 @@ class User(
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+    val id: Int,
 
     @Column(name = "phone_number", nullable = false)
     var phoneNumber: String,

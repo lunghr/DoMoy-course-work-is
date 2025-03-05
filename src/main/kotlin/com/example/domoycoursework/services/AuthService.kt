@@ -23,7 +23,7 @@ class AuthService(
 ) {
     fun registerUser(request: UserRegisterRequest): AuthResponse {
         val user = User(
-            id = 0L,
+            id = 0,
             email = request.email,
             phoneNumber = request.phoneNumber,
             password = passwordEncoder.encode(request.password)
@@ -38,7 +38,7 @@ class AuthService(
 
     fun registerAdmin(request: AdminRegisterRequest): AuthResponse {
         val admin = Admin(
-            id = 0L,
+            id = 0,
             email = request.email,
             phoneNumber = request.phoneNumber,
             password = passwordEncoder.encode(request.password)

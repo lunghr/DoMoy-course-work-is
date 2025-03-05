@@ -7,10 +7,10 @@ import io.swagger.v3.oas.annotations.media.Schema
 @Schema(description = "Verification response DTO")
 class VerificationResponseDto(
     @Schema(description = "Verification Request Id", example = "1")
-    var id: Long,
+    var id: Int,
 
     @Schema(description = "User Id", example = "1")
-    var userId: Long,
+    var userId: Int,
 
     @Schema(description = "First name", example = "Oleg")
     var firstName: String,
