@@ -4,6 +4,9 @@ DROP TABLE IF EXISTS verification_requests CASCADE ;
 DROP TABLE IF EXISTS tsj_requests CASCADE ;
 DROP TABLE IF EXISTS secret_keys CASCADE ;
 DROP TABLE IF EXISTS emergency_notifications CASCADE ;
+DROP TABLE IF EXISTS applications CASCADE ;
+DROP TABLE IF EXISTS applications_filenames CASCADE ;
+DROP TABLE IF EXISTS application_responses CASCADE ;
 -- DROP TABLE IF EXISTS users;
 
 CREATE TABLE houses (
@@ -69,6 +72,40 @@ CREATE TABLE emergency_notifications(
         FOREIGN KEY (admin_id) REFERENCES admins(admin_id) ON DELETE CASCADE,
     CONSTRAINT fk_emergency_notifications_house
         FOREIGN KEY (house_id) REFERENCES houses(id) ON DELETE CASCADE
+);
+
+-- change user_id on id
+CREATE TABLE applications(
+    id SERIAL PRIMARY KEY,
+    status VARCHAR(255) NOT NULL,
+    user_id INT NOT NULL,
+    theme VARCHAR(255) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description VARCHAR NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    CONSTRAINT fk_applications_user
+        FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+CREATE TABLE applications_filenames(
+    id SERIAL PRIMARY KEY,
+    application_id INT NOT NULL,
+    file_name VARCHAR NOT NULL,
+    CONSTRAINT fk_applications_files_application
+        FOREIGN KEY (application_id) REFERENCES applications(id) ON DELETE CASCADE
+);
+
+CREATE TABLE application_responses(
+    id SERIAL PRIMARY KEY,
+    application_id INT NOT NULL,
+    admin_id INT NOT NULL,
+    response VARCHAR NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    date TIMESTAMP NOT NULL,
+    CONSTRAINT fk_application_responses_application
+        FOREIGN KEY (application_id) REFERENCES applications(id) ON DELETE CASCADE,
+    CONSTRAINT fk_application_responses_admin
+        FOREIGN KEY (admin_id) REFERENCES admins(admin_id) ON DELETE CASCADE
 );
 
 -- CREATE TABLE users (

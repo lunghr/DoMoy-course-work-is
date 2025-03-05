@@ -25,11 +25,7 @@ class ApplicationService(
     private var userService: UserService,
     private var jwtService: JwtService,
     private var adminService: AdminService,
-    private var fileService: FileService
 ) {
-    //TODO: change to System.getenv("MINIO_BUCKET")
-    private final val dotenv: Dotenv = Dotenv.load()
-    var bucketName: String = dotenv["MINIO_POST_BUCKET"]
 
     fun createApplication(
         applicationRequestDto: ApplicationRequestDto,
@@ -37,54 +33,42 @@ class ApplicationService(
         files: List<MultipartFile>?
     ): Application {
         return userService.loadUserByEmail(jwtService.getUsername(jwtService.extractToken(token)))?.let {
-            applicationRepository.save(
-                Application(
-                    id = 0,
-                    user = it,
-                    theme = ApplicationTheme.valueOf(applicationRequestDto.theme),
-                    title = applicationRequestDto.title,
-                    description = applicationRequestDto.description,
-                    filenames = files?.map { file -> fileService.saveFile(file, bucketName) } ?: emptyList()
-                ))
+            applicationRepository.createApplication(applicationRequestDto, it.id, files)
         } ?: throw UserNotFoundException("User not found")
     }
 
     fun createResponse(
         applicationResponseDto: ApplicationResponseDto,
         token: String,
-        id: Long
+        id: Int
     ): ApplicationResponsesHistoryDto {
         return adminService.loadAdminByEmail(jwtService.getUsername(jwtService.extractToken(token)))?.let { admin ->
             applicationRepository.findApplicationById(id)?.let { application ->
                 if (application.status == ApplicationStatus.COMPLETED || application.status == ApplicationStatus.REJECTED) {
                     throw NoPermissionException("Application is already completed or rejected")
                 }
-                application.status = ApplicationStatus.valueOf(applicationResponseDto.status)
-                applicationRepository.save(application)
-                applicationResponseRepository.save(
-                    ApplicationResponse(
-                        id = 0,
-                        application = application,
-                        admin = admin,
-                        response = applicationResponseDto.response,
-                        status = ApplicationStatus.valueOf(applicationResponseDto.status)
-                    )
+                applicationRepository.updateApplicationStatus(
+                    id,
+                    ApplicationStatus.valueOf(applicationResponseDto.status)
+                )
+                applicationResponseRepository.createApplicationResponse(
+                    applicationResponseDto,
+                    admin.id,
+                    id
                 )
                 return createHistory(application)
             } ?: throw NotFoundException("Application not found")
         } ?: throw NotFoundException("Admin not found")
     }
 
-    fun getApplication(id: Long, token: String): Application {
+    fun getApplication(id: Int, token: String): Application {
         return applicationRepository.findApplicationById(id)?.let { application ->
             userService.loadUserByEmail(jwtService.getUsername(jwtService.extractToken(token)))?.let { user ->
-                if (application.user != user) {
+                if (application.userId != user.id) {
                     throw UserNotFoundException("User is not the author of this application")
                 }
-//                return createHistory(application)
                 return application
-            } ?: adminService.loadAdminByEmail(jwtService.getUsername(jwtService.extractToken(token)))?.let { admin ->
-//                return createHistory(application)
+            } ?: adminService.loadAdminByEmail(jwtService.getUsername(jwtService.extractToken(token)))?.let {
                 return application
             } ?: throw UserNotFoundException("User not found")
         } ?: throw NotFoundException("Application not found")
@@ -96,9 +80,7 @@ class ApplicationService(
 
     fun createHistory(application: Application): ApplicationResponsesHistoryDto {
         return ApplicationResponsesHistoryDto(
-            responses = application.responses.associate { response ->
-                response.id to response.status
-            },
+            responses = applicationResponseRepository.findAllResponsesByApplicationId(application.id)
         )
     }
 

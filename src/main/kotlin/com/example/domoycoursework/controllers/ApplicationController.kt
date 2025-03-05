@@ -42,14 +42,14 @@ class ApplicationController(
     fun createResponse(
         @RequestHeader("Authorization") token: String,
         @RequestBody responseDto: ApplicationResponseDto,
-        @PathVariable("id") id: Long
+        @PathVariable("id") id: Int
     ): ApplicationResponsesHistoryDto {
         return applicationService.createResponse(responseDto, token, id)
     }
 
     @GetMapping("/{id}")
     fun getResponse(
-        @PathVariable("id") id: Long,
+        @PathVariable("id") id: Int,
         @RequestHeader("Authorization") token: String
     ): Application {
         return applicationService.getApplication(id, token)
