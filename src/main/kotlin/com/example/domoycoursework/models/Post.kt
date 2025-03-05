@@ -8,27 +8,11 @@ import java.time.format.DateTimeFormatter
 import java.util.Date
 
 
-@Entity
-@Table(name = "posts")
 class Post (
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
-
-    @Column(name = "title", nullable = false)
+    val id: Int,
     var title: String,
-
-    @Column(name = "content", nullable = false)
     var content: String,
-
-    @Column(name = "created_at", nullable = false)
-    @JsonFormat(pattern = "HH:mm dd.MM.yy")
-    var createdAt: String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm dd.MM.yy")),
-
-    @Column(name = "file_name", nullable = true)
+    var createdAt: String,
     var fileName: String? = null,
-
-    @Column(name = "author", nullable = false)
     var author: String
 )

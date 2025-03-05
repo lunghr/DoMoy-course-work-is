@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS emergency_notifications CASCADE ;
 DROP TABLE IF EXISTS applications CASCADE ;
 DROP TABLE IF EXISTS applications_filenames CASCADE ;
 DROP TABLE IF EXISTS application_responses CASCADE ;
+DROP TABLE IF EXISTS posts CASCADE ;
 -- DROP TABLE IF EXISTS users;
 
 CREATE TABLE houses (
@@ -107,6 +108,15 @@ CREATE TABLE application_responses(
     CONSTRAINT fk_application_responses_admin
         FOREIGN KEY (admin_id) REFERENCES admins(admin_id) ON DELETE CASCADE
 );
+
+CREATE TABLE posts(
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content VARCHAR NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    filename VARCHAR,
+    author VARCHAR(255) NOT NULL
+)
 
 -- CREATE TABLE users (
 --     id SERIAL PRIMARY KEY,

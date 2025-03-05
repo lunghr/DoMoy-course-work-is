@@ -31,12 +31,12 @@ class PostController(
     }
 
     @PostMapping("/update/{id}")
-    fun updatePost(@RequestHeader("Authorization") token: String, @PathVariable id: Long, @RequestPart @Valid postDto: String, @RequestPart("image", required = false) image: MultipartFile? ): Post {
+    fun updatePost(@RequestHeader("Authorization") token: String, @PathVariable id: Int, @RequestPart @Valid postDto: String, @RequestPart("image", required = false) image: MultipartFile? ): Post {
         return postService.updatePost(id,postService.convertToDto(postDto), token, image)
     }
 
     @DeleteMapping("/delete/{id}")
-    fun deletePost(@RequestHeader("Authorization") token: String, @PathVariable id: Long) {
+    fun deletePost(@RequestHeader("Authorization") token: String, @PathVariable id: Int) {
         postService.deletePost(id, token)
     }
 }
