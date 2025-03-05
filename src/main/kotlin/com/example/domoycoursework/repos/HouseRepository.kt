@@ -31,14 +31,14 @@ class HouseRepository(
         )
     }.firstOrNull()
 
-    fun findHouseById(id: Long): House? = jdbcTemplate.query("SELECT * FROM find_house_by_id(?)", arrayOf(id)){rs, _ ->
+    fun findHouseById(id: Int): House? = jdbcTemplate.query("SELECT * FROM find_house_by_id(?)", arrayOf(id)){rs, _ ->
         House(
             id = rs.getInt("id"),
             address = rs.getString("address")
         )
     }.firstOrNull()
 
-    fun findFlatsByHouseId(id: Long): List<Int> = jdbcTemplate.query("SELECT * FROM find_flats_by_house_id(?)", arrayOf(id)){rs, _ ->
+    fun findFlatsByHouseId(id: Int): List<Int> = jdbcTemplate.query("SELECT * FROM find_flats_by_house_id(?)", arrayOf(id)){rs, _ ->
         rs.getInt("flat_number")
     }
 

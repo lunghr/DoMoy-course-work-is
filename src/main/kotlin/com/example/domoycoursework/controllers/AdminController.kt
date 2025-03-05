@@ -44,7 +44,7 @@ class AdminController(
     }
 
     @GetMapping("/houses/{houseId}/flats")
-    fun getFlatsByHouse(@PathVariable houseId: Long): List<Int> {
+    fun getFlatsByHouse(@PathVariable houseId: Int): List<Int> {
         return houseAndFlatService.getFlatsByHouse(houseId)
     }
 

@@ -2,9 +2,9 @@ CREATE OR REPLACE FUNCTION create_flat(p_house_id INT, p_flat_number INT, p_cada
 RETURNS TABLE (id INT, house_id INT, flat_number INT, cadastral_number VARCHAR(255), owner_id INT) AS $$
 BEGIN
     IF NOT EXISTS(SELECT 1 FROM flats f WHERE f.house_id = p_house_id AND f.flat_number = p_flat_number) THEN
-        INSERT INTO flats (house_id, flat_number, cadastral_number, owner_id)
-        VALUES (p_house_id, p_flat_number, p_cadastral_number, p_owner_id)
-        RETURNING * INTO id, house_id, flat_number, cadastral_number, owner_id;
+        RETURN QUERY INSERT INTO flats (house_id, flat_number, cadastral_number, owner_id)
+            VALUES (p_house_id, p_flat_number, p_cadastral_number, p_owner_id)
+            RETURNING flats.id, flats.house_id, flats.flat_number, flats.cadastral_number, flats.owner_id;
     ELSE
         RAISE EXCEPTION 'Flat with house_id % and flat_number % already exists', p_house_id, p_flat_number;
     END IF;
@@ -24,14 +24,13 @@ $$ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION create_house(p_address VARCHAR(255))
-RETURNS TABLE (id INT, address VARCHAR(255)) AS $$
+    RETURNS TABLE (id INT, address VARCHAR(255)) AS $$
 BEGIN
-    IF NOT EXISTS(SELECT id, address
-                  FROM houses
-                  WHERE houses.address = p_address) THEN
-        INSERT INTO houses  (address)
-        VALUES (p_address)
-        RETURNING houses.id, houses.address INTO id, address;
+    IF NOT EXISTS (SELECT 1 FROM houses WHERE houses.address = p_address) THEN
+        RETURN QUERY
+            INSERT INTO houses (address)
+                VALUES (p_address)
+                RETURNING houses.id, houses.address;
     ELSE
         RAISE EXCEPTION 'House with address % already exists', p_address;
     END IF;

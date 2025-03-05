@@ -39,11 +39,11 @@ class HouseAndFlatService(
         } ?: throw InvalidUserDataException("Address not found")
     }
 
-    fun getFlatsByHouse(id: Long): List<Int> {
+    fun getFlatsByHouse(id: Int): List<Int> {
         return houseRepository.findFlatsByHouseId(id)
     }
 
-    fun getHouseById(id: Long): House {
+    fun getHouseById(id: Int): House {
         return houseRepository.findHouseById(id) ?: throw NotFoundException("House not found")
     }
 }
