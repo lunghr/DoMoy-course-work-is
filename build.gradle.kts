@@ -33,6 +33,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("io.jsonwebtoken:jjwt:0.12.6")
 	implementation ("io.minio:minio:8.3.4")
+	implementation("org.flywaydb:flyway-core:9.16.0")
 	implementation("org.apache.poi:poi-ooxml:5.2.3")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 	implementation("io.springfox:springfox-swagger-ui:3.0.0")

@@ -27,13 +27,8 @@ class UserService(
     fun setAdditionalUserData(verificationRequest: VerificationRequest, flat: Flat): User {
         val user = userRepository.findUserById(verificationRequest.userId)
             ?: throw Exception("User not found")
-        return userRepository.save(user.apply {
-            this.verificationStatus = VerificationStatus.VERIFIED
-            this.firstName = verificationRequest.firstName
-            this.lastName = verificationRequest.lastName
-            this.flatId = flat.id
-            this.chatName = "${this.firstName} ${this.lastName}, ${flat.flatNumber}"
-        })
+        val chatName = "${verificationRequest.firstName} ${verificationRequest.lastName}, ${flat.flatNumber}"
+        return userRepository.setAdditionalUserData(user, verificationRequest, flat, chatName)
 
     }
 

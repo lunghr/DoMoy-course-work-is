@@ -2,7 +2,9 @@ package com.example.domoycoursework.repos
 
 import com.example.domoycoursework.enums.Role
 import com.example.domoycoursework.enums.VerificationStatus
+import com.example.domoycoursework.models.Flat
 import com.example.domoycoursework.models.User
+import com.example.domoycoursework.models.VerificationRequest
 
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Service
@@ -32,6 +34,19 @@ class UserRepository(
     fun changeRole(id: Int, role: Role): User =
         jdbcTemplate.query("SELECT * FROM change_user_role(?,?)", arrayOf(id, role.name)) { rs, _ -> toUser(rs) }
             .first()
+
+    fun setAdditionalUserData(user: User, verificationRequest: VerificationRequest, flat: Flat, chatName: String): User =
+        jdbcTemplate.query(
+            "SELECT * FROM set_additional_data_to_user(?,?,?,?,?,?)",
+            arrayOf(
+                user.id,
+                verificationRequest.firstName,
+                verificationRequest.lastName,
+                flat.id,
+                VerificationStatus.VERIFIED.toString(),
+                chatName
+            )
+        ) { rs, _ -> toUser(rs) }.first()
 
     fun toUser(rs: ResultSet): User = User(
         id = rs.getInt("id"),
