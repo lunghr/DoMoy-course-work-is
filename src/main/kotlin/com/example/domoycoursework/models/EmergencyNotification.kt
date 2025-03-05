@@ -24,9 +24,7 @@ class EmergencyNotification(
     @JsonFormat(pattern = "HH:mm dd.MM.yy")
     var date: String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm dd.MM.yy")),
 
-    @ManyToOne
-    @JoinColumn(name = "house_id", nullable = false)
-    var house: House,
+    var houseId: Int,
 
     @ManyToOne
     @JoinColumn(name = "admin_id", nullable = false)

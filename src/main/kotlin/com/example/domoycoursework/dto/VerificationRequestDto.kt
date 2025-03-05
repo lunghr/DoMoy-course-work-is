@@ -10,7 +10,7 @@ class VerificationRequestDto (
     @Schema(description = "Last name", example = "Olegov")
     val lastName: String,
     @Schema(description = "Cadastral Number", example = "123456789")
-    val cadastralNumber: Long,
+    val cadastralNumber: String,
     @Schema(description = "Address", example = "Moscow, Red Square")
     val address: String,
     @Schema(description = "Flat number", example = "123")

@@ -17,11 +17,7 @@ class HouseAndFlatService(
 
     fun createHouse(address: String): House {
         return houseRepository.findHouseByAddress(address)
-            ?.let { throw InvalidUserDataException("House already exist in data base") } ?: houseRepository.save(
-            House(
-                id = 0,
-                address = address
-            )
+            ?.let { throw InvalidUserDataException("House already exist in data base") } ?: houseRepository.save(address
         )
     }
 
@@ -33,18 +29,18 @@ class HouseAndFlatService(
             )?.let { throw InvalidUserDataException("Flat already owned") } ?: flatRepository.save(
                 Flat(
                     id = 0,
-                    house = it,
+                    houseId = it.id,
                     flatNumber = verificationRequest.flatNumber,
                     cadastralNumber = verificationRequest.cadastralNumber,
-                    owner = verificationRequest.user
+                    //TODO: change to real user id
+                    ownerId = 1
                 )
             )
         } ?: throw InvalidUserDataException("Address not found")
     }
 
     fun getFlatsByHouse(id: Long): List<Int> {
-        return houseRepository.findHouseById(id)?.flats?.map { it.flatNumber }
-            ?: throw InvalidUserDataException("House not found")
+        return houseRepository.findFlatsByHouseId(id)
     }
 
     fun getHouseById(id: Long): House {

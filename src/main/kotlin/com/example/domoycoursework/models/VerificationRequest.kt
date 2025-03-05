@@ -19,7 +19,7 @@ class VerificationRequest(
     var lastName: String,
 
     @Column(name = "cadastral_number", nullable = false)
-    var cadastralNumber: Long,
+    var cadastralNumber: String,
 
     @Column(name = "address", nullable = false)
     var address: String,

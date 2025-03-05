@@ -21,7 +21,7 @@ class EmergencyNotificationService(
                     id = 0,
                     title = emergencyNotificationDto.title,
                     description = emergencyNotificationDto.description,
-                    house = houseAndFlatService.getHouseById(emergencyNotificationDto.houseId),
+                    houseId = emergencyNotificationDto.houseId,
                     admin = admin
                 )
             )

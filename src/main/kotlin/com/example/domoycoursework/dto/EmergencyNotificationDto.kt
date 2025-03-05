@@ -11,5 +11,5 @@ class EmergencyNotificationDto (
     var description: String,
 
     @Schema(description = "House ID", example = "1")
-    var houseId: Long
+    var houseId: Int
 )

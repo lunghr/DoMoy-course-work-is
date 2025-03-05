@@ -39,9 +39,7 @@ class User(
     @Column(name = "password", nullable = false)
     private var password: String,
 
-    @OneToOne
-    @JoinColumn(name = "flat_id", nullable = true)
-    var flat: Flat? = null,
+    var flatId: Int? = null,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false) var role: Role = Role.ROLE_USER,

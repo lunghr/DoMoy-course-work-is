@@ -19,7 +19,7 @@ class VerificationResponseDto(
     var lastName: String,
 
     @Schema(description = "Cadastral Number", example = "381981319")
-    var cadastralNumber: Long,
+    var cadastralNumber: String,
 
     @Schema(description = "Flat Number", example = "1")
     var flatNumber: Int,
