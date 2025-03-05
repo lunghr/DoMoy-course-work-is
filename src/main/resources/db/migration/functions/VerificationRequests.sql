@@ -85,3 +85,55 @@ $$ LANGUAGE plpgsql;
 
 
 
+CREATE OR REPLACE FUNCTION create_tsj_request(p_user_id INT)
+RETURNS TABLE(id INT, user_id INT, status VARCHAR(255)) AS $$
+BEGIN
+    RETURN QUERY
+    INSERT INTO tsj_requests (user_id, status)
+    VALUES (p_user_id, 'PENDING')
+    RETURNING tsj_requests.id, tsj_requests.user_id, tsj_requests.status;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+CREATE OR REPLACE FUNCTION change_tsj_request_status(p_id INT, p_status VARCHAR(255))
+RETURNS TABLE(id INT, user_id INT, status VARCHAR(255)) AS $$
+BEGIN
+    RETURN QUERY
+    UPDATE tsj_requests
+    SET status = p_status
+    WHERE tsj_requests.id = p_id
+    RETURNING tsj_requests.id, tsj_requests.user_id, tsj_requests.status;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+CREATE OR REPLACE FUNCTION find_tsj_request_by_id(p_id INT)
+RETURNS TABLE(id INT, user_id INT, status VARCHAR(255)) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT tr.id, tr.user_id, tr.status
+    FROM tsj_requests tr
+    WHERE tr.id = p_id;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+CREATE OR REPLACE FUNCTION find_tsj_requests_by_user_id(p_user_id INT)
+RETURNS TABLE(id INT, user_id INT, status VARCHAR(255)) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT tr.id, tr.user_id, tr.status
+    FROM tsj_requests tr
+    WHERE tr.user_id = p_user_id;
+END;
+$$ LANGUAGE plpgsql;
+
+
+

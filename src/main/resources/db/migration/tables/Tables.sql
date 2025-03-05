@@ -1,6 +1,7 @@
 DROP  TABLE IF EXISTS houses CASCADE ;
 DROP  TABLE IF EXISTS flats CASCADE ;
 DROP TABLE IF EXISTS verification_requests CASCADE ;
+DROP TABLE IF EXISTS tsj_requests CASCADE ;
 -- DROP TABLE IF EXISTS users;
 
 CREATE TABLE houses (
@@ -31,7 +32,15 @@ CREATE TABLE verification_requests(
     status VARCHAR(255) NOT NULL,
     CONSTRAINT fk_verification_requests_user
         FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
-)
+);
+
+CREATE TABLE tsj_requests(
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    CONSTRAINT fk_tsj_requests_user
+        FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
 
 -- CREATE TABLE users (
 --     id SERIAL PRIMARY KEY,

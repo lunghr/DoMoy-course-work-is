@@ -40,12 +40,12 @@ class VerificationController (
     }
 
     @PostMapping("admin/approve-TSJ/{id}")
-    fun approveTSJRequest(@PathVariable id: Long): TSJResponseDto {
+    fun approveTSJRequest(@PathVariable id: Int): TSJResponseDto {
         return verificationService.approveTSJRequest(id)
     }
 
     @PostMapping("admin/decline-TSJ/{id}")
-    fun rejectTSJRequest(@PathVariable id: Long): TSJResponseDto {
+    fun rejectTSJRequest(@PathVariable id: Int): TSJResponseDto {
         return verificationService.declineTSJRequest(id)
     }
 

@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 @Schema(description = "TSJ response DTO")
 class TSJResponseDto (
     @Schema(description = "TSJ Request Id", example = "1")
-    val id: Long,
+    val id: Int,
 
     @Schema(description = "User Id", example = "1")
     val userId: Int,

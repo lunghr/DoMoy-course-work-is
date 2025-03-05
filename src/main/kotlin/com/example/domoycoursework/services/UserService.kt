@@ -37,10 +37,11 @@ class UserService(
 
     }
 
-    fun changeRole(user: User, role: Role): User {
-        return userRepository.save(user.apply {
-            this.role = role
-        })
+    fun changeRole(id: Int, role: Role): User {
+        val user = userRepository.findUserById(id)
+            ?: throw Exception("User not found")
+        user.role = role
+        return userRepository.save(user)
     }
 
 

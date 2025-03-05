@@ -4,19 +4,8 @@ import com.example.domoycoursework.enums.RequestStatus
 import jakarta.persistence.*
 
 
-@Entity
-@Table(name = "tsj_requests")
 class TSJRequest (
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
-
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    var user: User,
-
-    @Column(name = "status", nullable = false)
-    @Enumerated(EnumType.STRING)
+    val id: Int,
+    var userId: Int,
     var status: RequestStatus
 )

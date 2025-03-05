@@ -86,35 +86,26 @@ class VerificationService(
             if (it.status != RequestStatus.DECLINED) {
                 throw RequestAlreadyInWorkException("TSJ request is not declined")
             }
-            it.status = RequestStatus.PENDING
-            tsjRequestRepository.save(it)
-        } ?: TSJRequest(
-            id = 0,
-            user = user,
-            status = RequestStatus.PENDING,
-        ).also { tsjRequestRepository.save(it) })
+            tsjRequestRepository.changeTSJRequestStatus(it.id, RequestStatus.PENDING)
+        } ?: tsjRequestRepository.createTSJRequest(user.id))
     }
 
-    fun approveTSJRequest(id: Long): TSJResponseDto {
-        val tsjRequest = tsjRequestRepository.findTSJRequestById(id)?.let {
+    fun approveTSJRequest(id: Int): TSJResponseDto {
+        tsjRequestRepository.findTSJRequestById(id)?.let {
             if (it.status == RequestStatus.PENDING) {
-                it.user.role = Role.ROLE_TSJ
-                it.status = RequestStatus.ACCEPTED
-                userService.changeRole(it.user, Role.ROLE_TSJ)
+                userService.changeRole(it.userId, Role.ROLE_TSJ)
                 it
             } else {
                 throw RequestAlreadyInWorkException("TSJ request is not pending")
             }
         } ?: throw NotFoundException("TSJ request not found")
-        tsjRequest.status = RequestStatus.ACCEPTED
-        return createTSJResponseDto(tsjRequestRepository.save(tsjRequest))
+        return createTSJResponseDto(tsjRequestRepository.changeTSJRequestStatus(id, RequestStatus.ACCEPTED))
     }
 
-    fun declineTSJRequest(id: Long): TSJResponseDto {
+    fun declineTSJRequest(id: Int): TSJResponseDto {
         return tsjRequestRepository.findTSJRequestById(id)?.let {
             if (it.status == RequestStatus.PENDING) {
-                it.status = RequestStatus.DECLINED
-                createTSJResponseDto(tsjRequestRepository.save(it))
+                createTSJResponseDto(tsjRequestRepository.changeTSJRequestStatus(id, RequestStatus.DECLINED))
             } else {
                 throw RequestAlreadyInWorkException("TSJ request is not pending")
             }
@@ -137,7 +128,7 @@ class VerificationService(
     fun createTSJResponseDto(tsjRequest: TSJRequest): TSJResponseDto {
         return TSJResponseDto(
             id = tsjRequest.id,
-            userId = tsjRequest.user.id,
+            userId = tsjRequest.userId,
             status = tsjRequest.status,
         )
     }
