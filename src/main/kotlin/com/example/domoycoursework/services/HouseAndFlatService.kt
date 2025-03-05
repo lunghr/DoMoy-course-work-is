@@ -42,6 +42,10 @@ class HouseAndFlatService(
         return houseRepository.findFlatsByHouseId(id)
     }
 
+    fun findHouseById(id: Int): House? {
+        return houseRepository.findHouseById(id)
+    }
+
     fun getHouseById(id: Int): House {
         return houseRepository.findHouseById(id) ?: throw NotFoundException("House not found")
     }

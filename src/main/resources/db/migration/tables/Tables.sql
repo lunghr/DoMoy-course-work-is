@@ -3,6 +3,7 @@ DROP  TABLE IF EXISTS flats CASCADE ;
 DROP TABLE IF EXISTS verification_requests CASCADE ;
 DROP TABLE IF EXISTS tsj_requests CASCADE ;
 DROP TABLE IF EXISTS secret_keys CASCADE ;
+DROP TABLE IF EXISTS emergency_notifications CASCADE ;
 -- DROP TABLE IF EXISTS users;
 
 CREATE TABLE houses (
@@ -54,6 +55,20 @@ CREATE TABLE  secret_keys(
     admin_id INT,
     CONSTRAINT fk_secret_keys_admin
         FOREIGN KEY (admin_id) REFERENCES admins(admin_id) ON DELETE CASCADE
+);
+
+-- change admin_id on id
+CREATE TABLE emergency_notifications(
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description VARCHAR NOT NULL,
+    date TIMESTAMP NOT NULL,
+    house_id INT NOT NULL,
+    admin_id INT NOT NULL,
+    CONSTRAINT fk_emergency_notifications_admin
+        FOREIGN KEY (admin_id) REFERENCES admins(admin_id) ON DELETE CASCADE,
+    CONSTRAINT fk_emergency_notifications_house
+        FOREIGN KEY (house_id) REFERENCES houses(id) ON DELETE CASCADE
 );
 
 -- CREATE TABLE users (
