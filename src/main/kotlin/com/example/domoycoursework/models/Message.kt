@@ -19,13 +19,9 @@ class Message(
     @JsonBackReference
     var chat: Chat,
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = true)
-    var user: User? = null,
+    var userId: Int,
 
-    @ManyToOne
-    @JoinColumn(name = "admin_id", nullable = true)
-    var admin: Admin? = null,
+    var adminId: Int,
 
     @Column(name = "text", nullable = false)
     var text: String,

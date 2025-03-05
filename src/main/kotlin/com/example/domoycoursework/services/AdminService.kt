@@ -40,7 +40,7 @@ class AdminService @Autowired constructor(
             admin.firstName = adminAdditionalDataDto.firstName
             admin.lastName = adminAdditionalDataDto.lastName
             admin.chatName = "${admin.firstName} ${admin.lastName}, admin"
-            adminRepository.save(admin)
+            adminRepository.setAdditionalAdminData(admin)
         } ?: throw UserNotFoundException("Admin not found")
     }
 
