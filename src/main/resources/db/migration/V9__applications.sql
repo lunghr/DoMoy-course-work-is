@@ -69,3 +69,27 @@ BEGIN
     RETURNING applications_filenames.id, applications_filenames.application_id, applications_filenames.file_name;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION find_all_applications()
+    RETURNS TABLE (id INT, status VARCHAR(255), user_id INT, theme VARCHAR(255), title VARCHAR(255),
+                   description VARCHAR, created_at TIMESTAMP) AS $$
+BEGIN
+    RETURN QUERY SELECT applications.id, applications.status, applications.user_id, applications.theme,
+                         applications.title, applications.description, applications.created_at
+                 FROM applications;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE FUNCTION find_all_applications_by_user_id(p_user_id INT)
+    RETURNS TABLE (id INT, status VARCHAR(255), user_id INT, theme VARCHAR(255), title VARCHAR(255),
+                   description VARCHAR, created_at TIMESTAMP) AS $$
+BEGIN
+    RETURN QUERY SELECT applications.id, applications.status, applications.user_id, applications.theme,
+                         applications.title, applications.description, applications.created_at
+                 FROM applications
+                 WHERE applications.user_id = p_user_id;
+END;
+$$ LANGUAGE plpgsql;

@@ -1,12 +1,15 @@
 package com.example.domoycoursework.services
 
 import com.example.domoycoursework.exceptions.FileException
+import io.minio.GetPresignedObjectUrlArgs
 import io.minio.MinioClient
 import io.minio.PutObjectArgs
 import io.minio.RemoveObjectArgs
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
+import io.minio.http.Method
 import org.springframework.stereotype.Service
+import java.util.concurrent.TimeUnit
 
 @Service
 class FileService(
@@ -47,4 +50,15 @@ class FileService(
         }
     }
 
+    fun getPresignedUrl(fileName: String, bucketName: String): String {
+        val args = GetPresignedObjectUrlArgs.builder()
+            .method(Method.GET)
+            .bucket(bucketName)
+            .`object`(fileName)
+            .expiry(60, TimeUnit.MINUTES)
+            .build()
+
+        return minioClient.getPresignedObjectUrl(args)
+    }
 }
+

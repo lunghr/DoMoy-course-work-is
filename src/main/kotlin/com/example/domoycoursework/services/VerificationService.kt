@@ -133,5 +133,27 @@ class VerificationService(
         )
     }
 
+    fun getAllVerificationRequests(): List<VerificationRequest> {
+        return verificationRequestRepository.findAll()
+    }
+
+    fun getAllTSJRequests(): List<TSJRequest> {
+        return tsjRequestRepository.findALl()
+    }
+
+    fun getVerificationRequestStatus(token: String): RequestStatus {
+        val user = userService.loadUserByEmail(jwtService.getUsername(jwtService.extractToken(token)))
+            ?: throw NotFoundException("User not found")
+        return verificationRequestRepository.findVerificationRequestByUser(user)?.status
+            ?: throw NotFoundException("Verification request not found")
+    }
+
+    fun getTSJRequestStatus(token: String): RequestStatus {
+        val user = userService.loadUserByEmail(jwtService.getUsername(jwtService.extractToken(token)))
+            ?: throw NotFoundException("User not found")
+        return tsjRequestRepository.findTSJRequestByUser(user)?.status
+            ?: throw NotFoundException("TSJ request not found")
+    }
+
 
 }

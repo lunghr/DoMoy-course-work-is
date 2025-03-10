@@ -25,7 +25,12 @@ class ApplicationService(
     private var userService: UserService,
     private var jwtService: JwtService,
     private var adminService: AdminService,
+    private var fileService: FileService
 ) {
+    //TODO: change to System.getenv("MINIO_BUCKET")
+    val dotenv: Dotenv = Dotenv.load()
+    val bucketName: String = "applicationimages"
+
 
     fun createApplication(
         applicationRequestDto: ApplicationRequestDto,
@@ -82,6 +87,34 @@ class ApplicationService(
         return ApplicationResponsesHistoryDto(
             responses = applicationResponseRepository.findAllResponsesByApplicationId(application.id)
         )
+    }
+
+    fun getAllApplications(): List<Application> {
+        return applicationRepository.findAll()
+    }
+
+    fun getImageByFilename(filename: String): String {
+        return fileService.getPresignedUrl(filename, bucketName)
+    }
+
+    fun getResponses(id: Int, token: String): List<ApplicationResponse> {
+        return applicationRepository.findApplicationById(id)?.let { application ->
+            userService.loadUserByEmail(jwtService.getUsername(jwtService.extractToken(token)))?.let { user ->
+                if (application.userId != user.id) {
+                    throw UserNotFoundException("User is not the author of this application")
+                }
+                return applicationResponseRepository.findAllResponsesByApplicationId(application.id)
+            } ?: adminService.loadAdminByEmail(jwtService.getUsername(jwtService.extractToken(token)))?.let {
+                return applicationResponseRepository.findAllResponsesByApplicationId(application.id)
+            } ?: throw UserNotFoundException("User not found")
+        } ?: throw NotFoundException("Application not found")
+    }
+
+
+    fun getAllApplicationsByUser(token: String): List<Application> {
+        return userService.loadUserByEmail(jwtService.getUsername(jwtService.extractToken(token)))?.let { user ->
+            return applicationRepository.findAllByUserId(user.id)
+        } ?: throw UserNotFoundException("User not found")
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.domoycoursework.services
 
+import com.example.domoycoursework.models.Admin
 import com.example.domoycoursework.models.User
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
@@ -18,6 +19,12 @@ class JwtService {
     fun generateToken(userDetails: UserDetails): String {
         val claims = HashMap<String, Any>()
         if (userDetails is User) {
+            val customUserDetails = userDetails
+            claims["id"] = customUserDetails.id ?: 0
+            claims["email"] = customUserDetails.email
+            claims["role"] = customUserDetails.role
+        }
+        if (userDetails is Admin){
             val customUserDetails = userDetails
             claims["id"] = customUserDetails.id ?: 0
             claims["email"] = customUserDetails.email

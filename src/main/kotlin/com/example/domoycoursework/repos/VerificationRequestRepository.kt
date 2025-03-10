@@ -63,6 +63,13 @@ class VerificationRequestRepository(
         jdbcTemplate.query("SELECT * FROM find_verification_requests_by_user_id(?)", arrayOf(user.id)) { rs, _ ->
             toVerificationRequest(rs)
         }.firstOrNull()
+
+
+    fun findAll(): List<VerificationRequest> =
+        jdbcTemplate.query("SELECT * FROM get_all_verification_requests()") { rs, _ ->
+            toVerificationRequest(rs)
+        }
+
     fun toVerificationRequest(rs: java.sql.ResultSet): VerificationRequest {
         return VerificationRequest(
             id = rs.getInt("id"),

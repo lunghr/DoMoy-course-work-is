@@ -25,7 +25,7 @@ class ApplicationRepository(
     ): Application {
         //TODO: change to System.getenv("MINIO_BUCKET")
         val dotenv: Dotenv = Dotenv.load()
-        val bucketName: String = dotenv["MINIO_APPLICATION_IMAGES_BUCKET"]
+        val bucketName: String = "applicationimages"
 
 
         val application = jdbcTemplate.query(
@@ -65,6 +65,15 @@ class ApplicationRepository(
         ) { rs, _ ->
             toApplication(rs)
         }.firstOrNull()
+
+
+    fun findAll(): List<Application> = jdbcTemplate.query("SELECT * FROM find_all_applications()") { rs, _ ->
+        toApplication(rs)
+    }
+
+    fun findAllByUserId(userId: Int): List<Application> = jdbcTemplate.query("SELECT * FROM find_all_applications_by_user_id(?)", arrayOf(userId)) { rs, _ ->
+        toApplication(rs)
+    }
 
     fun toApplication(rs: ResultSet): Application = Application(
         id = rs.getInt("id"),

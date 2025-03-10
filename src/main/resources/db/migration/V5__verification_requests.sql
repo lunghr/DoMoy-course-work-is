@@ -137,3 +137,28 @@ $$ LANGUAGE plpgsql;
 
 
 
+
+CREATE OR REPLACE FUNCTION get_all_verification_requests() RETURNS TABLE(id INT, first_name VARCHAR(255), last_name VARCHAR(255),
+              cadastral_number VARCHAR(255), address VARCHAR(255),
+              flat_number INT, user_id INT, status VARCHAR(255)) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT vr.id, vr.first_name, vr.last_name, vr.cadastral_number, vr.address, vr.flat_number, vr.user_id, vr.status
+    FROM verification_requests vr;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE FUNCTION get_all_tsj_requests() RETURNS TABLE (
+    id INT, user_id INT, status VARCHAR(255)) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT t.id, t.user_id, t.status
+    FROM tsj_requests t;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+

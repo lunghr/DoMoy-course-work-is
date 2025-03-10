@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestHeader
@@ -38,5 +39,15 @@ class PostController(
     @DeleteMapping("/delete/{id}")
     fun deletePost(@RequestHeader("Authorization") token: String, @PathVariable id: Int) {
         postService.deletePost(id, token)
+    }
+
+    @GetMapping("/all")
+    fun getAllPosts(): List<Post> {
+        return postService.getAllPosts()
+    }
+
+    @GetMapping("/image/{filename}")
+    fun getImage(@PathVariable filename: String): String {
+        return postService.getImageByFilename(filename)
     }
 }

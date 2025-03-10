@@ -54,4 +54,30 @@ class ApplicationController(
     ): Application {
         return applicationService.getApplication(id, token)
     }
+
+    @GetMapping("/all")
+    fun getAllApplications(): List<Application> {
+        return applicationService.getAllApplications()
+    }
+
+    @GetMapping("/{id}/responses")
+    fun getResponses(
+        @PathVariable("id") id: Int,
+        @RequestHeader("Authorization") token: String
+    ): List<ApplicationResponse> {
+        return applicationService.getResponses(id, token)
+    }
+
+    @GetMapping("/al-by-user")
+    fun getAllApplicationsByUser(
+        @RequestHeader("Authorization") token: String
+    ): List<Application> {
+        return applicationService.getAllApplicationsByUser(token)
+    }
+
+    @GetMapping("/image/{filename}")
+    fun getImage(@PathVariable filename: String): String {
+        return applicationService.getImageByFilename(filename)
+    }
+
 }

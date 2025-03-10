@@ -3,14 +3,8 @@ package com.example.domoycoursework.controllers
 import com.example.domoycoursework.dto.AdminAdditionalDataDto
 import com.example.domoycoursework.dto.EmergencyNotificationDto
 import com.example.domoycoursework.dto.HouseCreationRequestDto
-import com.example.domoycoursework.models.Admin
-import com.example.domoycoursework.models.EmergencyNotification
-import com.example.domoycoursework.models.Flat
-import com.example.domoycoursework.models.House
-import com.example.domoycoursework.services.AdminService
-import com.example.domoycoursework.services.EmergencyNotificationService
-import com.example.domoycoursework.services.HouseAndFlatService
-import com.example.domoycoursework.services.SecretKeyService
+import com.example.domoycoursework.models.*
+import com.example.domoycoursework.services.*
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
@@ -30,7 +24,8 @@ class AdminController(
     private val secretKeyService: SecretKeyService,
     private val houseAndFlatService: HouseAndFlatService,
     private val emergencyNotificationService: EmergencyNotificationService,
-    private val adminService: AdminService
+    private val adminService: AdminService,
+    private val verificationService: VerificationService
 ) {
 
     @PostMapping("/secret-keys/create")
@@ -62,5 +57,20 @@ class AdminController(
         @RequestHeader("Authorization") token: String
     ): Admin {
         return adminService.setAdditionalAdminData(adminAdditionalDataDto, token)
+    }
+
+
+    @GetMapping("/verification-list")
+    fun getVerificationList(
+        @RequestHeader("Authorization") token: String
+    ): List<VerificationRequest> {
+        return verificationService.getAllVerificationRequests()
+    }
+
+    @GetMapping("/tsj-list")
+    fun getTsjList(
+        @RequestHeader("Authorization") token: String
+    ): List<TSJRequest> {
+        return verificationService.getAllTSJRequests()
     }
 }

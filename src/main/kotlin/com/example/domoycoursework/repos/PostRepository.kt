@@ -20,7 +20,7 @@ class PostRepository(
 
     //TODO: change to System.getenv("MINIO_BUCKET")
     private final val dotenv: Dotenv = Dotenv.load()
-    private var bucketName: String = dotenv["MINIO_POST_BUCKET"]
+    private var bucketName: String = "postimages"
 
     fun createPost(postDto: PostDto, author: String, file: MultipartFile?): Post? =
         jdbcTemplate.query(
@@ -52,6 +52,10 @@ class PostRepository(
         jdbcTemplate.query(
             "SELECT * FROM find_post_by_id(?)", arrayOf(id)
         ) { rs, _ -> toPost(rs) }.firstOrNull()
+
+    fun findAll(): List<Post> = jdbcTemplate.query("SELECT * FROM find_all_posts()") { rs, _ ->
+        toPost(rs)
+    }
 
 
     fun toPost(rs: ResultSet): Post = Post(

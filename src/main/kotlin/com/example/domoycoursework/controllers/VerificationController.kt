@@ -3,6 +3,7 @@ package com.example.domoycoursework.controllers
 import com.example.domoycoursework.dto.TSJResponseDto
 import com.example.domoycoursework.dto.VerificationRequestDto
 import com.example.domoycoursework.dto.VerificationResponseDto
+import com.example.domoycoursework.enums.RequestStatus
 import com.example.domoycoursework.models.TSJRequest
 import com.example.domoycoursework.models.VerificationRequest
 import com.example.domoycoursework.services.VerificationService
@@ -47,6 +48,16 @@ class VerificationController (
     @PostMapping("admin/decline-TSJ/{id}")
     fun rejectTSJRequest(@PathVariable id: Int): TSJResponseDto {
         return verificationService.declineTSJRequest(id)
+    }
+
+    @GetMapping("/get-verification-status")
+    fun getRequestStatus (@RequestHeader token: String): RequestStatus{
+        return verificationService.getVerificationRequestStatus(token)
+    }
+
+    @GetMapping("/get-TSJ-status")
+    fun getTSJStatus (@RequestHeader token: String): RequestStatus{
+        return verificationService.getTSJRequestStatus(token)
     }
 
 }

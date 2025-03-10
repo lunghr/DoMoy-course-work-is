@@ -33,6 +33,11 @@ class TSJRequestRepository(
         }.firstOrNull()
 
 
+    fun findALl(): List<TSJRequest> = jdbcTemplate.query("SELECT * FROM get_all_tsj_requests()") { rs, _ ->
+        toTsjRequest(rs)
+    }
+
+
     fun toTsjRequest(rs: java.sql.ResultSet): TSJRequest = TSJRequest(
         id = rs.getInt("id"),
         userId = rs.getInt("user_id"),

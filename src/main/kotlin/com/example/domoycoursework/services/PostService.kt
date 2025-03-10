@@ -30,10 +30,7 @@ class PostService(
 ) {
     //TODO: change to System.getenv("MINIO_BUCKET")
     private final val dotenv: Dotenv = Dotenv.load()
-    private var bucketName: String = dotenv["MINIO_POST_BUCKET"]
-
-
-
+    var bucketName: String = "postimages"
 
 
     fun createPost(postDto: PostDto, token: String, image: MultipartFile?): Post {
@@ -70,6 +67,14 @@ class PostService(
         } ?: throw NotFoundException("Post not found")
     }
 
+
+    fun getAllPosts(): List<Post> {
+        return postRepository.findAll()
+    }
+
+    fun getImageByFilename(filename: String): String {
+        return fileService.getPresignedUrl(filename, bucketName)
+    }
 
     fun convertToDto(postDto: String): PostDto {
         return jacksonObjectMapper().readValue(postDto)

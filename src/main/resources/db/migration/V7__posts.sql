@@ -43,3 +43,14 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+
+CREATE OR REPLACE FUNCTION find_all_posts()
+    RETURNS TABLE (id INT, title VARCHAR(255), content VARCHAR, created_at TIMESTAMP, filename VARCHAR,
+                   author VARCHAR(255)) AS $$
+BEGIN
+    RETURN QUERY SELECT posts.id, posts.title, posts.content, posts.created_at, posts.filename, posts.author
+                 FROM posts;
+END;
+$$ LANGUAGE plpgsql;
+
