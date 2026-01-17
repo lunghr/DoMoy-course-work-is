@@ -1,6 +1,6 @@
 package com.example.domoycoursework.models.enums
 
-enum class ApplicationStatus {
+enum class TicketStatus {
     NEW,
     IN_PROGRESS,
     COMPLETED,

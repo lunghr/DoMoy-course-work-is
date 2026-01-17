@@ -26,7 +26,7 @@ class User(
     private var password: String,
 
     @Enumerated(EnumType.STRING)
-    var role: Role = Role.UNVERIFIED
+    var role: Role = Role.USER
 ) : UserDetails {
 
     override fun getAuthorities(): Collection<GrantedAuthority> {

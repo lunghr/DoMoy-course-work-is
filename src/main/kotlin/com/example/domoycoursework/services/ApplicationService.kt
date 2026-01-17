@@ -3,12 +3,12 @@ package com.example.domoycoursework.services
 import com.example.domoycoursework.dto.ApplicationRequestDto
 import com.example.domoycoursework.dto.ApplicationResponseDto
 import com.example.domoycoursework.dto.ApplicationResponsesHistoryDto
-import com.example.domoycoursework.models.enums.ApplicationStatus
+import com.example.domoycoursework.models.enums.TicketStatus
 import com.example.domoycoursework.exceptions.NoPermissionException
 import com.example.domoycoursework.exceptions.NotFoundException
 import com.example.domoycoursework.exceptions.UserNotFoundException
-import com.example.domoycoursework.models.Application
-import com.example.domoycoursework.models.ApplicationResponse
+import com.example.domoycoursework.models.Ticket
+import com.example.domoycoursework.models.TicketComments
 import com.example.domoycoursework.repos.ApplicationRepository
 import com.example.domoycoursework.repos.ApplicationResponseRepository
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -35,7 +35,7 @@ class ApplicationService(
         applicationRequestDto: ApplicationRequestDto,
         token: String,
         files: List<MultipartFile>?
-    ): Application {
+    ): Ticket {
         return userService.loadUserByEmail(jwtService.getUsername(jwtService.extractToken(token)))?.let {
             applicationRepository.createApplication(applicationRequestDto, it.id, files)
         } ?: throw UserNotFoundException("User not found")
@@ -48,12 +48,12 @@ class ApplicationService(
     ): ApplicationResponsesHistoryDto {
         return adminService.loadAdminByEmail(jwtService.getUsername(jwtService.extractToken(token)))?.let { admin ->
             applicationRepository.findApplicationById(id)?.let { application ->
-                if (application.status == ApplicationStatus.COMPLETED || application.status == ApplicationStatus.REJECTED) {
+                if (application.status == TicketStatus.COMPLETED || application.status == TicketStatus.REJECTED) {
                     throw NoPermissionException("Application is already completed or rejected")
                 }
                 applicationRepository.updateApplicationStatus(
                     id,
-                    ApplicationStatus.valueOf(applicationResponseDto.status)
+                    TicketStatus.valueOf(applicationResponseDto.status)
                 )
                 applicationResponseRepository.createApplicationResponse(
                     applicationResponseDto,
@@ -65,7 +65,7 @@ class ApplicationService(
         } ?: throw NotFoundException("Admin not found")
     }
 
-    fun getApplication(id: Int, token: String): Application {
+    fun getApplication(id: Int, token: String): Ticket {
         return applicationRepository.findApplicationById(id)?.let { application ->
             userService.loadUserByEmail(jwtService.getUsername(jwtService.extractToken(token)))?.let { user ->
                 if (application.userId != user.id) {
@@ -82,13 +82,13 @@ class ApplicationService(
         return jacksonObjectMapper().readValue(applicationDto)
     }
 
-    fun createHistory(application: Application): ApplicationResponsesHistoryDto {
+    fun createHistory(application: Ticket): ApplicationResponsesHistoryDto {
         return ApplicationResponsesHistoryDto(
             responses = applicationResponseRepository.findAllResponsesByApplicationId(application.id)
         )
     }
 
-    fun getAllApplications(): List<Application> {
+    fun getAllApplications(): List<Ticket> {
         return applicationRepository.findAll()
     }
 
@@ -96,7 +96,7 @@ class ApplicationService(
         return fileService.getPresignedUrl(filename, bucketName)
     }
 
-    fun getResponses(id: Int, token: String): List<ApplicationResponse> {
+    fun getResponses(id: Int, token: String): List<TicketComments> {
         return applicationRepository.findApplicationById(id)?.let { application ->
             userService.loadUserByEmail(jwtService.getUsername(jwtService.extractToken(token)))?.let { user ->
                 if (application.userId != user.id) {
@@ -110,7 +110,7 @@ class ApplicationService(
     }
 
 
-    fun getAllApplicationsByUser(token: String): List<Application> {
+    fun getAllApplicationsByUser(token: String): List<Ticket> {
         return userService.loadUserByEmail(jwtService.getUsername(jwtService.extractToken(token)))?.let { user ->
             return applicationRepository.findAllByUserId(user.id)
         } ?: throw UserNotFoundException("User not found")
