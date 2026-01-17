@@ -1,7 +1,7 @@
 package com.example.domoycoursework.repos
 
 import com.example.domoycoursework.dto.ApplicationResponseDto
-import com.example.domoycoursework.enums.ApplicationStatus
+import com.example.domoycoursework.models.enums.ApplicationStatus
 import com.example.domoycoursework.models.ApplicationResponse
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Service

@@ -1,4 +1,4 @@
-package com.example.domoycoursework.enums
+package com.example.domoycoursework.models.enums
 
 enum class ApplicationTheme {
     WATER_SUPPLY,

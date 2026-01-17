@@ -1,11 +1,6 @@
 package com.example.domoycoursework.models
 
-import com.example.domoycoursework.enums.ApplicationStatus
-import com.fasterxml.jackson.annotation.JsonBackReference
-import com.fasterxml.jackson.annotation.JsonFormat
-import jakarta.persistence.*
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import com.example.domoycoursework.models.enums.ApplicationStatus
 
 class ApplicationResponse(
     var id: Int,

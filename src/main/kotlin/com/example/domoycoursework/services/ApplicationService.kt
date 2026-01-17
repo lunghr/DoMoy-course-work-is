@@ -3,8 +3,7 @@ package com.example.domoycoursework.services
 import com.example.domoycoursework.dto.ApplicationRequestDto
 import com.example.domoycoursework.dto.ApplicationResponseDto
 import com.example.domoycoursework.dto.ApplicationResponsesHistoryDto
-import com.example.domoycoursework.enums.ApplicationStatus
-import com.example.domoycoursework.enums.ApplicationTheme
+import com.example.domoycoursework.models.enums.ApplicationStatus
 import com.example.domoycoursework.exceptions.NoPermissionException
 import com.example.domoycoursework.exceptions.NotFoundException
 import com.example.domoycoursework.exceptions.UserNotFoundException

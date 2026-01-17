@@ -1,6 +1,6 @@
 package com.example.domoycoursework.repos
 
-import com.example.domoycoursework.enums.RequestStatus
+import com.example.domoycoursework.models.enums.RequestStatus
 import com.example.domoycoursework.models.TSJRequest
 import com.example.domoycoursework.models.User
 import org.springframework.jdbc.core.JdbcTemplate

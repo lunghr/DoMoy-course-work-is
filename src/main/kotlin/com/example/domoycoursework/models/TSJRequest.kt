@@ -1,7 +1,6 @@
 package com.example.domoycoursework.models
 
-import com.example.domoycoursework.enums.RequestStatus
-import jakarta.persistence.*
+import com.example.domoycoursework.models.enums.RequestStatus
 
 
 class TSJRequest (

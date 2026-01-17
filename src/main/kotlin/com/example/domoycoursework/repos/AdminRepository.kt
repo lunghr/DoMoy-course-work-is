@@ -1,6 +1,6 @@
 package com.example.domoycoursework.repos
 
-import com.example.domoycoursework.enums.Role
+import com.example.domoycoursework.models.enums.Role
 import com.example.domoycoursework.models.Admin
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Service

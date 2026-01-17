@@ -1,8 +1,8 @@
 package com.example.domoycoursework.repos
 
 import com.example.domoycoursework.dto.ApplicationRequestDto
-import com.example.domoycoursework.enums.ApplicationStatus
-import com.example.domoycoursework.enums.ApplicationTheme
+import com.example.domoycoursework.models.enums.ApplicationStatus
+import com.example.domoycoursework.models.enums.ApplicationTheme
 import com.example.domoycoursework.models.Application
 import com.example.domoycoursework.services.FileService
 import io.github.cdimascio.dotenv.Dotenv

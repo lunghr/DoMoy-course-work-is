@@ -32,15 +32,6 @@ services:
     env_file:
       - .env
 
-  adminer:
-    image: adminer
-    container_name: adminer_cw
-    restart: always
-    ports:
-      - "13228:8080"
-    environment:
-      ADMINER_DEFAULT_SERVER: database_cw
-
   minio:
     image: quay.io/minio/minio
     container_name: minio_cw

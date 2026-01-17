@@ -1,11 +1,10 @@
 package com.example.domoycoursework.repos
 
 import com.example.domoycoursework.dto.VerificationRequestDto
-import com.example.domoycoursework.enums.RequestStatus
+import com.example.domoycoursework.models.enums.RequestStatus
 import com.example.domoycoursework.exceptions.InvalidUserDataException
 import com.example.domoycoursework.models.User
 import com.example.domoycoursework.models.VerificationRequest
-import com.example.domoycoursework.repos.VerificationRequestRepository
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Service
 
