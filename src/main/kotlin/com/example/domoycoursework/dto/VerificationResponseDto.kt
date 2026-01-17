@@ -1,6 +1,6 @@
 package com.example.domoycoursework.dto
 
-import com.example.domoycoursework.enums.RequestStatus
+import com.example.domoycoursework.models.enums.RequestStatus
 import io.swagger.v3.oas.annotations.media.Schema
 
 

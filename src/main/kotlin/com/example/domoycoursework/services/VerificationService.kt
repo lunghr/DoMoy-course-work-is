@@ -3,9 +3,9 @@ package com.example.domoycoursework.services
 import com.example.domoycoursework.dto.TSJResponseDto
 import com.example.domoycoursework.dto.VerificationRequestDto
 import com.example.domoycoursework.dto.VerificationResponseDto
-import com.example.domoycoursework.enums.RequestStatus
-import com.example.domoycoursework.enums.Role
-import com.example.domoycoursework.enums.VerificationStatus
+import com.example.domoycoursework.models.enums.RequestStatus
+import com.example.domoycoursework.models.enums.Role
+import com.example.domoycoursework.models.enums.VerificationStatus
 import com.example.domoycoursework.exceptions.InvalidUserDataException
 import com.example.domoycoursework.exceptions.NotFoundException
 import com.example.domoycoursework.exceptions.RequestAlreadyInWorkException

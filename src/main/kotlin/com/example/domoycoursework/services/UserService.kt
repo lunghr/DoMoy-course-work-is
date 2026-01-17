@@ -1,7 +1,6 @@
 package com.example.domoycoursework.services
 
-import com.example.domoycoursework.enums.Role
-import com.example.domoycoursework.enums.VerificationStatus
+import com.example.domoycoursework.models.enums.Role
 import com.example.domoycoursework.models.Flat
 import com.example.domoycoursework.models.User
 import com.example.domoycoursework.models.VerificationRequest

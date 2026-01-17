@@ -2,8 +2,8 @@ package com.example.domoycoursework.controllers
 
 import com.example.domoycoursework.dto.ApplicationResponseDto
 import com.example.domoycoursework.dto.ApplicationResponsesHistoryDto
-import com.example.domoycoursework.models.Application
-import com.example.domoycoursework.models.ApplicationResponse
+import com.example.domoycoursework.models.Ticket
+import com.example.domoycoursework.models.TicketComments
 import com.example.domoycoursework.services.ApplicationService
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -30,7 +30,7 @@ class ApplicationController(
         @RequestHeader("Authorization") token: String,
         @RequestPart("applicationDto") applicationDto: String,
         @RequestPart("files") files: List<MultipartFile>?
-    ): Application {
+    ): Ticket {
         return applicationService.createApplication(
             applicationService.convertRequestToDto(applicationDto),
             token,
@@ -51,12 +51,12 @@ class ApplicationController(
     fun getResponse(
         @PathVariable("id") id: Int,
         @RequestHeader("Authorization") token: String
-    ): Application {
+    ): Ticket {
         return applicationService.getApplication(id, token)
     }
 
     @GetMapping("/all")
-    fun getAllApplications(): List<Application> {
+    fun getAllApplications(): List<Ticket> {
         return applicationService.getAllApplications()
     }
 
@@ -64,14 +64,14 @@ class ApplicationController(
     fun getResponses(
         @PathVariable("id") id: Int,
         @RequestHeader("Authorization") token: String
-    ): List<ApplicationResponse> {
+    ): List<TicketComments> {
         return applicationService.getResponses(id, token)
     }
 
     @GetMapping("/al-by-user")
     fun getAllApplicationsByUser(
         @RequestHeader("Authorization") token: String
-    ): List<Application> {
+    ): List<Ticket> {
         return applicationService.getAllApplicationsByUser(token)
     }
 

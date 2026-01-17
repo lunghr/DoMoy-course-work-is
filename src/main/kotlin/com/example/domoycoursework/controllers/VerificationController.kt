@@ -3,9 +3,7 @@ package com.example.domoycoursework.controllers
 import com.example.domoycoursework.dto.TSJResponseDto
 import com.example.domoycoursework.dto.VerificationRequestDto
 import com.example.domoycoursework.dto.VerificationResponseDto
-import com.example.domoycoursework.enums.RequestStatus
-import com.example.domoycoursework.models.TSJRequest
-import com.example.domoycoursework.models.VerificationRequest
+import com.example.domoycoursework.models.enums.RequestStatus
 import com.example.domoycoursework.services.VerificationService
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid

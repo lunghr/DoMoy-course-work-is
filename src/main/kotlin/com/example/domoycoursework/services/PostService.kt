@@ -1,8 +1,6 @@
 package com.example.domoycoursework.services
 
 import com.example.domoycoursework.dto.PostDto
-import com.example.domoycoursework.enums.Role
-import com.example.domoycoursework.exceptions.FileException
 import com.example.domoycoursework.exceptions.InvalidUserDataException
 import com.example.domoycoursework.exceptions.NoPermissionException
 import com.example.domoycoursework.exceptions.NotFoundException
@@ -12,13 +10,8 @@ import com.example.domoycoursework.repos.PostRepository
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.cdimascio.dotenv.Dotenv
-import io.minio.MinioClient
-import io.minio.PutObjectArgs
-import io.minio.RemoveObjectArgs
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
-import java.util.UUID
 
 @Service
 class PostService(
