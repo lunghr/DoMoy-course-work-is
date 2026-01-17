@@ -1,8 +1,7 @@
 package com.example.domoycoursework.repos
 
 import com.example.domoycoursework.dto.EmergencyNotificationDto
-import com.example.domoycoursework.models.Admin
-import com.example.domoycoursework.models.EmergencyNotification
+import com.example.domoycoursework.models.EmergencyPost
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Service
 import java.sql.ResultSet
@@ -13,7 +12,7 @@ import java.time.format.DateTimeFormatter
 class EmergencyNotificationRepository(
     private var jdbcTemplate: JdbcTemplate
 ) {
-    fun save(emergencyNotificationDto: EmergencyNotificationDto, adminId: Int): EmergencyNotification =
+    fun save(emergencyNotificationDto: EmergencyNotificationDto, adminId: Int): EmergencyPost =
         jdbcTemplate.query(
             "SELECT * FROM create_emergency_notification(?, ?, ?, ?)",
             arrayOf(
@@ -26,7 +25,7 @@ class EmergencyNotificationRepository(
             toEmergencyNotification(rs)
         }.first()
 
-    fun toEmergencyNotification(rs: ResultSet): EmergencyNotification = EmergencyNotification(
+    fun toEmergencyNotification(rs: ResultSet): EmergencyPost = EmergencyPost(
         id = rs.getInt("id"),
         title = rs.getString("title"),
         description = rs.getString("description"),

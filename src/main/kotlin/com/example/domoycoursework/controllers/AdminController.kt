@@ -47,7 +47,7 @@ class AdminController(
     fun createEmergencyNotification(
         @RequestBody emergencyNotificationDto: EmergencyNotificationDto,
         @RequestHeader("Authorization") token: String
-    ): EmergencyNotification {
+    ): EmergencyPost {
         return emergencyNotificationService.createEmergencyNotification(emergencyNotificationDto, token)
     }
 
