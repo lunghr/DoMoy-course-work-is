@@ -2,34 +2,25 @@ package com.example.domoycoursework.models
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.CascadeType
-import jakarta.persistence.Embedded
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 
-
 @Entity
-@Table(name = "houses")
-class House(
+@Table(name = "residential_complexes")
+class ResidentialComplex (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long,
 
-    @Embedded
-    var address: Address,
+    @Column(nullable = false)
+    var name: String,
 
-    var totalFloors: Int,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="complex_id")
-    var complex: ResidentialComplex? = null,
-
-    @OneToMany(mappedBy = "house", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var flats: MutableList<Flat> = mutableListOf()
+    @OneToMany(mappedBy = "complex", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    var houses: MutableList<House> = mutableListOf()
 )
