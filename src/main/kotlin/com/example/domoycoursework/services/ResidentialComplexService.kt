@@ -1,14 +1,11 @@
 package com.example.domoycoursework.services
 
 import com.example.domoycoursework.dto.HouseDto
-import com.example.domoycoursework.dto.ResidentialComplexDto
 import com.example.domoycoursework.models.Address
 import com.example.domoycoursework.models.Flat
 import com.example.domoycoursework.models.House
-import com.example.domoycoursework.models.ResidentialComplex
 import com.example.domoycoursework.repos.FlatRepository
 import com.example.domoycoursework.repos.HouseRepository
-import com.example.domoycoursework.repos.ResidentialComplexRepository
 import com.example.domoycoursework.repos.UserRepository
 import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
@@ -107,8 +104,4 @@ class ResidentialComplexService(
 
     fun findFlatsByUser(userId: Long): List<Flat> =
         flatRepository.findByOwnersId(userId)
-
-    fun findComplexByFlatCadastralNumber(cadastral: String): ResidentialComplex? =
-        flatRepository.findByCadastralNumber(cadastral.trim())
-            .house.complex
 }

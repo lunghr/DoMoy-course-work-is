@@ -38,6 +38,7 @@ class AdminController(
         return residentialComplexService.getFlatsByHouse(id)
     }
 
+
 //    @PostMapping("/emergency-notification/create")
 //    fun createEmergencyNotification(
 //        @RequestBody emergencyNotificationDto: EmergencyNotificationDto,

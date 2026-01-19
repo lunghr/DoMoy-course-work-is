@@ -22,7 +22,7 @@ import java.time.LocalDateTime
 class Ticket(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long,
+    var id: Long? = null,
 
     @CreationTimestamp
     @Column(updatable = false)

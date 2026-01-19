@@ -49,6 +49,8 @@ class JwtService {
 
     fun getUsername(token: String): String = getClaim(token) { it.subject }
 
+    fun getUserId(token: String): Long = getClaim(token) { (it["id"] as Long) }
+
     fun getRole(token: String): String = getClaim(token) { it["role"] as String }
 
     fun extractToken(token: String): String = token.removePrefix("Bearer ")

@@ -20,7 +20,7 @@ import java.time.LocalDateTime
 class TicketComment(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long,
+    var id: Long? = null,
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -29,7 +29,7 @@ class TicketComment(
     @UpdateTimestamp
     var updatedAt: LocalDateTime? = null,
 
-    var newStatus: TicketStatus? = null,
+    var newStatus: TicketStatus,
     var text: String,
 
     @ManyToOne(fetch = FetchType.LAZY)
