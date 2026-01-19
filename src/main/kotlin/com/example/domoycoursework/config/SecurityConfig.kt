@@ -1,7 +1,5 @@
 package com.example.domoycoursework.config
 
-
-import com.example.domoycoursework.services.AdminService
 import com.example.domoycoursework.services.JwtService
 import com.example.domoycoursework.services.UserService
 import org.springframework.context.annotation.Bean
@@ -14,7 +12,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
@@ -27,27 +24,19 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 class SecurityConfig(
     private var userService: UserService,
     private var jwtService: JwtService,
-    private var adminService: AdminService
 ) {
 
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
     @Bean
-    fun authenticationProvider(): AuthenticationProvider = DaoAuthenticationProvider().apply {
-        setUserDetailsService(combinedUserDetailsService())
-        setPasswordEncoder(passwordEncoder())
-    }
+    fun customUserDetailsService(): UserDetailsService = UserDetailsService { username ->
+        userService.findUser(username)}
 
     @Bean
-    fun combinedUserDetailsService(): UserDetailsService {
-        return UserDetailsService { username ->
-            userService.loadUserByEmail(username)
-                ?: userService.loadUserByPhoneNumber(username)
-                ?: adminService.loadAdminByEmail(username)
-                ?: adminService.loadAdminByPhoneNumber(username)
-                ?: throw UsernameNotFoundException("User or Admin with username $username not found")
-        }
+    fun authenticationProvider(): AuthenticationProvider = DaoAuthenticationProvider().apply {
+        setUserDetailsService(customUserDetailsService())
+        setPasswordEncoder(passwordEncoder())
     }
 
     @Bean
@@ -74,7 +63,7 @@ class SecurityConfig(
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authenticationProvider(authenticationProvider())
             .addFilterBefore(
-                JwtAuthFilter(jwtService, userService, adminService),
+                JwtAuthFilter(jwtService, userService),
                 UsernamePasswordAuthenticationFilter::class.java
             )
         return http.build()

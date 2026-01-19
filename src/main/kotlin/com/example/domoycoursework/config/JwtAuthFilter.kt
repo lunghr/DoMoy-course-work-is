@@ -1,7 +1,5 @@
 package com.example.domoycoursework.config
 
-
-import com.example.domoycoursework.services.AdminService
 import com.example.domoycoursework.services.JwtService
 import com.example.domoycoursework.services.UserService
 import jakarta.servlet.FilterChain
@@ -16,8 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 @Component
 class JwtAuthFilter(
     private val jwtService: JwtService,
-    private val userService: UserService,
-    private val adminService: AdminService
+    private val userService: UserService
 ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(
@@ -37,13 +34,7 @@ class JwtAuthFilter(
         val username = jwt?.let { jwtService.getUsername(it) }
         println(username)
         if (username != null && SecurityContextHolder.getContext().authentication == null) {
-
-
-            val authenticatedUser = userService.loadUserByPhoneNumber(username)
-                ?: userService.loadUserByEmail(username)
-                ?: adminService.loadAdminByPhoneNumber(username)
-                ?: adminService.loadAdminByEmail(username)
-                ?: throw Exception("User with username $username not found")
+            val authenticatedUser = userService.findUser(username)
 
             if (jwtService.validateToken(jwt, authenticatedUser)) {
                 val authToken =

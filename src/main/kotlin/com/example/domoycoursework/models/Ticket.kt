@@ -46,5 +46,5 @@ class Ticket(
     var assignedTo: User? = null,
 
     @OneToMany(mappedBy = "ticket", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var comments: MutableList<TicketComments> = mutableListOf()
+    var comments: MutableList<TicketComment> = mutableListOf()
 )

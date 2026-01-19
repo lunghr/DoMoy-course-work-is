@@ -1,10 +1,8 @@
 package com.example.domoycoursework.dto
 
-import com.example.domoycoursework.models.TicketComments
-import io.swagger.v3.oas.annotations.media.Schema
+import com.example.domoycoursework.models.TicketComment
 
-@Schema(name = "ApplicationResponsesHistoryDto", description = "DTO for ApplicationResponsesHistory")
+
 class ApplicationResponsesHistoryDto (
-    @Schema(description = "Responses_id")
-    var responses: List<TicketComments>
+    var responses: List<TicketComment>
 )
