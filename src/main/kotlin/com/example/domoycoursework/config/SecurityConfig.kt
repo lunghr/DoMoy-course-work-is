@@ -51,13 +51,7 @@ class SecurityConfig(
             .authorizeHttpRequests { authorize ->
                 authorize
                     .requestMatchers("/auth/**").permitAll()
-                    .requestMatchers("/ws/**").permitAll()
-                    .requestMatchers("/index.html").permitAll()
-                    .requestMatchers("/notifications/**").permitAll()
-                    .requestMatchers("/swagger-ui/**", "/swagger-resources/", "/v3/api-docs/**").permitAll()
-                    .requestMatchers("posts/all").hasAnyRole("ADMIN", "TSJ", "USER")
-                    .requestMatchers("/posts/**").hasAnyRole("ADMIN", "TSJ")
-                    .requestMatchers("/admin/**", "/verification/admin/**", "/application/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
             }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }

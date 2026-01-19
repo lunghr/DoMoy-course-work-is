@@ -1,5 +1,6 @@
 package com.example.domoycoursework.controllers
 
+import com.example.domoycoursework.dto.AdminRegisterRequest
 import com.example.domoycoursework.dto.AuthRequest
 import com.example.domoycoursework.dto.AuthResponse
 import com.example.domoycoursework.dto.UserRegisterRequest
@@ -27,6 +28,11 @@ class AuthController(
     @PostMapping("/register-user")
     fun register(@RequestBody @Valid registerRequest: UserRegisterRequest): AuthResponse {
         return authService.registerUser(registerRequest)
+    }
+
+    @PostMapping("/register-admin")
+    fun registerAdmin(@RequestBody @Valid registerRequest: AdminRegisterRequest): AuthResponse {
+        return authService.registerAdmin(registerRequest)
     }
 
     @GetMapping("/username")

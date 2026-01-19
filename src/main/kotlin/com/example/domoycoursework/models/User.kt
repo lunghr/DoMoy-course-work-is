@@ -29,9 +29,8 @@ class User(
     var role: Role = Role.USER
 ) : UserDetails {
 
-    override fun getAuthorities(): Collection<GrantedAuthority> {
-        return listOf(SimpleGrantedAuthority(role.name))
-    }
+    override fun getAuthorities(): Collection<GrantedAuthority> =
+        listOf(SimpleGrantedAuthority("ROLE_${role.name}"))
 
     override fun getPassword(): String = password
     override fun getUsername(): String = email

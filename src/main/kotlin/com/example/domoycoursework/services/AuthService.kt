@@ -1,9 +1,12 @@
 package com.example.domoycoursework.services
 
+import com.example.domoycoursework.dto.AdminRegisterRequest
 import com.example.domoycoursework.dto.AuthRequest
 import com.example.domoycoursework.dto.AuthResponse
 import com.example.domoycoursework.models.User
 import com.example.domoycoursework.dto.UserRegisterRequest
+import com.example.domoycoursework.models.SecretKey
+import com.example.domoycoursework.models.enums.Role
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -29,6 +32,24 @@ class AuthService(
         println("User created")
         return AuthResponse(jwtService.generateToken(user))
     }
+    fun registerAdmin(request: AdminRegisterRequest): AuthResponse {
+        println("hi")
+        val admin = User(
+            email = request.email,
+            phoneNumber = request.phoneNumber,
+            password = passwordEncoder.encode(request.password),
+            role = Role.ADMIN
+        )
+        val key = SecretKey(
+            id = 0,
+            key = request.secretKey?:"",
+        )
+
+        userService.createAdmin(admin, key)
+        println("Admin created")
+        return AuthResponse(jwtService.generateToken(admin))
+    }
+
 
     fun login(request: AuthRequest): AuthResponse {
         authenticationManager.authenticate(
