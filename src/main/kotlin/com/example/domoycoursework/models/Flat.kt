@@ -14,10 +14,10 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "flats")
-class Flat (
+class Flat(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+    val id: Long? = null,
 
     @Column(nullable = false)
     var flatNumber: Int,
@@ -32,8 +32,10 @@ class Flat (
     var house: House,
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "flat_owners",
+    @JoinTable(
+        name = "flat_owners",
         joinColumns = [JoinColumn(name = "flat_id")],
-        inverseJoinColumns = [JoinColumn(name = "user_id")])
+        inverseJoinColumns = [JoinColumn(name = "user_id")]
+    )
     var owners: MutableList<User> = mutableListOf()
 )

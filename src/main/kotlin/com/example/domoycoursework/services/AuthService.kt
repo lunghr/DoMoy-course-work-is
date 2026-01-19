@@ -25,13 +25,11 @@ class AuthService(
             phoneNumber = request.phoneNumber,
             password = passwordEncoder.encode(request.password)
         )
-
-        println("${user.email}, ${user.phoneNumber}, ${user.password}, ${user.role}")
-
         userService.createUser(user)
         println("User created")
         return AuthResponse(jwtService.generateToken(user))
     }
+
     fun registerAdmin(request: AdminRegisterRequest): AuthResponse {
         println("hi")
         val admin = User(
@@ -42,14 +40,12 @@ class AuthService(
         )
         val key = SecretKey(
             id = 0,
-            key = request.secretKey?:"",
+            key = request.secretKey ?: "",
         )
 
         userService.createAdmin(admin, key)
-        println("Admin created")
         return AuthResponse(jwtService.generateToken(admin))
     }
-
 
     fun login(request: AuthRequest): AuthResponse {
         authenticationManager.authenticate(
@@ -66,11 +62,5 @@ class AuthService(
 
     fun getRoleFromToken(token: String): String {
         return jwtService.getRole(jwtService.extractToken(token))
-    }
-
-    fun refreshToken(token: String): String {
-        val username = jwtService.getUsername(jwtService.extractToken(token))
-        val userDetails = userService.findUser(username)
-        return jwtService.generateToken(userDetails)
     }
 }
