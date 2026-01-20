@@ -20,7 +20,7 @@ class Flat(
     val id: Long? = null,
 
     @Column(nullable = false)
-    var flatNumber: Int,
+    var number: Int,
 
     var floor: Int,
 

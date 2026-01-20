@@ -19,8 +19,8 @@ class User(
     @Column(nullable = false)
     var phoneNumber: String,
 
-    var firstName: String? = "",
-    var lastName: String? = "",
+    var firstName: String? = null,
+    var lastName: String? = null,
 
     @Column(nullable = false)
     private var password: String,

@@ -73,6 +73,14 @@ class PostService(
         return emergencyPostRepository.save(post)
     }
 
+    fun getNewsPostById(id: Long): NewsPost {
+        return newsPostRepository.findById(id).orElseThrow { NotFoundException("Post not found") }
+    }
+
+    fun getEmergencyPostById(id: Long): EmergencyPost {
+        return emergencyPostRepository.findById(id).orElseThrow { NotFoundException("Post not found") }
+    }
+
     fun updateNewsPost(id: Long, newsPostDto: NewsPostDto, token: String, image: MultipartFile?): NewsPost {
         val username = jwtService.getUsername(jwtService.extractToken(token))
         val redactor = userService.findUser(username)
@@ -91,7 +99,7 @@ class PostService(
     }
 
 
-    fun deletePost(id: Long, token: String) {
+    fun deleteNewsPost(id: Long, token: String) {
         val username = jwtService.getUsername(jwtService.extractToken(token))
         val redactor = userService.findUser(username)
 

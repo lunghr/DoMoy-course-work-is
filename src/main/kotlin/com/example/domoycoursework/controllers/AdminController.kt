@@ -1,50 +1,49 @@
 package com.example.domoycoursework.controllers
 
 import com.example.domoycoursework.dto.HouseDto
-import com.example.domoycoursework.models.*
-import com.example.domoycoursework.services.*
+import com.example.domoycoursework.models.Flat
+import com.example.domoycoursework.models.House
+import com.example.domoycoursework.models.SecretKey
+import com.example.domoycoursework.services.ResidentialComplexService
+import com.example.domoycoursework.services.SecretKeyService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
-
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/admin")
 @CrossOrigin(origins = ["*"])
-
 class AdminController(
     private val secretKeyService: SecretKeyService,
-    private val residentialComplexService: ResidentialComplexService,
+    private val residentialComplexService: ResidentialComplexService
 ) {
 
-    @PostMapping("/house")
-    fun createHouse(@RequestBody houseDto: HouseDto): ResponseEntity<Any> {
+    @PostMapping("/houses")
+    fun createHouse(
+        @RequestBody houseDto: HouseDto
+    ): ResponseEntity<String> {
         residentialComplexService.createHouse(houseDto)
-        return ResponseEntity.status(201).body("House created successfully")
+        return ResponseEntity.status(HttpStatus.CREATED).body("House created successfully")
     }
 
-    @GetMapping("/house/{id}")
-    fun getHouseById(@PathVariable id: Long): House {
-        return residentialComplexService.getHouseById(id)
+    @GetMapping("/houses/{id}")
+    fun getHouse(@PathVariable id: Long): ResponseEntity<House> {
+        return ResponseEntity.ok(residentialComplexService.getHouseById(id))
     }
 
-    @GetMapping("/house/{id}/flat")
-    fun getFlatsByHouse(@PathVariable id: Long): List<Flat> {
-        return residentialComplexService.getFlatsByHouse(id)
+    @GetMapping("/houses/{id}/flats")
+    fun getFlatsByHouse(@PathVariable id: Long): ResponseEntity<List<Flat>> {
+        return ResponseEntity.ok(residentialComplexService.getFlatsByHouse(id))
     }
 
-    @PostMapping("/key")
-    fun createKey() {
+    @PostMapping("/keys")
+    fun createKey(): ResponseEntity<String> {
         secretKeyService.createSecretKey()
+        return ResponseEntity.status(HttpStatus.CREATED).body("Secret key created")
     }
 
-    @GetMapping("/key")
-    fun getAvailableKeys(): List<SecretKey> {
-        return secretKeyService.getAllAvailableKeys()
+    @GetMapping("/keys/available")
+    fun getAvailableKeys(): ResponseEntity<List<SecretKey>> {
+        return ResponseEntity.ok(secretKeyService.getAllAvailableKeys())
     }
 }

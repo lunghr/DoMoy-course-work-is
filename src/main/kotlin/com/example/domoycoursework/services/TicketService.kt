@@ -38,7 +38,7 @@ class TicketService(
         ticketCommentDto: TicketCommentDto,
         token: String,
         ticketId: Long
-    ): ResponseEntity<Any> {
+    ): TicketComment {
         val ticket = ticketRepository.findById(ticketId).orElseThrow { NotFoundException("Ticket not found") }
         val admin = userService.findUser(jwtService.getUsername(jwtService.extractToken(token)))
 
@@ -54,7 +54,8 @@ class TicketService(
         ticket.assignedTo = admin
         ticketRepository.save(ticket)
 
-        ticketCommentRepository.save(
+
+        return ticketCommentRepository.save(
             TicketComment(
                 text = ticketCommentDto.text,
                 ticket = ticket,
@@ -62,7 +63,6 @@ class TicketService(
                 newStatus = TicketStatus.valueOf(ticketCommentDto.newStatus)
             )
         )
-        return ResponseEntity.status(201).body(ticketCommentRepository.findAllByTicketId(ticketId))
     }
 
     fun getTicketById(id: Long): Ticket {

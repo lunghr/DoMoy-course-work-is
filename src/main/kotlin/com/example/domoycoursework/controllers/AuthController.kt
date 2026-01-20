@@ -6,42 +6,39 @@ import com.example.domoycoursework.dto.AuthResponse
 import com.example.domoycoursework.dto.UserRegisterRequest
 import com.example.domoycoursework.services.AuthService
 import jakarta.validation.Valid
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin(origins = ["*"])
 class AuthController(
-    private var authService: AuthService
+    private val authService: AuthService
 ) {
+
     @PostMapping("/login")
-    fun login(@RequestBody @Valid authRequest: AuthRequest): AuthResponse {
-        return authService.login(authRequest)
+    fun login(@RequestBody @Valid authRequest: AuthRequest): ResponseEntity<AuthResponse> {
+        return ResponseEntity.ok(authService.login(authRequest))
     }
 
     @PostMapping("/register-user")
-    fun register(@RequestBody @Valid registerRequest: UserRegisterRequest): AuthResponse {
-        return authService.registerUser(registerRequest)
+    fun registerUser(@RequestBody @Valid registerRequest: UserRegisterRequest): ResponseEntity<AuthResponse> {
+        return ResponseEntity.status(HttpStatus.CREATED).body(authService.registerUser(registerRequest))
     }
 
     @PostMapping("/register-admin")
-    fun registerAdmin(@RequestBody @Valid registerRequest: AdminRegisterRequest): AuthResponse {
-        return authService.registerAdmin(registerRequest)
+    fun registerAdmin(@RequestBody @Valid registerRequest: AdminRegisterRequest): ResponseEntity<AuthResponse> {
+        return ResponseEntity.status(HttpStatus.CREATED).body(authService.registerAdmin(registerRequest))
     }
 
     @GetMapping("/username")
-    fun getUsername(@RequestHeader("Authorization") token: String): String {
-        return authService.getUsernameFromToken(token)
+    fun getUsername(@RequestHeader("Authorization") token: String): ResponseEntity<String> {
+        return ResponseEntity.ok(authService.getUsernameFromToken(token))
     }
 
     @GetMapping("/role")
-    fun getRole(@RequestHeader("Authorization") token: String): String {
-        return authService.getRoleFromToken(token)
+    fun getRole(@RequestHeader("Authorization") token: String): ResponseEntity<String> {
+        return ResponseEntity.ok(authService.getRoleFromToken(token))
     }
 }

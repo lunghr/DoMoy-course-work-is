@@ -1,0 +1,520 @@
+components:
+  schemas:
+    User:
+      type: object
+      description: A user in the system
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the user
+          format: int64
+          example: 1
+        email:
+          type: string
+          description: User's email address
+          format: email
+          uniqueItems: true
+          example: 'example@gmail.com'
+        phoneNumber:
+          type: string
+          description: User's phone number
+          uniqueItems: true
+          example: '+1234567890'
+        firstName:
+          type: string
+          description: User's first name
+          example: 'John'
+        lastName:
+          type: string
+          description: User's last name
+          example: 'Doe'
+        password:
+          type: string
+          description: User's password
+          example: 'securePassword123'
+        role:
+          $ref: '#/components/schemas/Role'
+      required:
+        - email
+        - phoneNumber
+        - password
+
+    House:
+      type: object
+      description: A house in the system
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the house
+          format: int64
+          example: 1
+        address:
+          $ref: '#/components/schemas/Address'
+        totalFloors:
+          type: integer
+          description: Total number of floors in the house
+          example: 3
+        flats:
+          type: array
+          description: List of flats in the house
+          items:
+            $ref: '#/components/schemas/Flat'
+      required:
+        - address
+        - totalFloors
+
+    Flat:
+      type: object
+      description: A flat in the system
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the flat
+          format: int64
+          example: 1
+        number:
+          type: string
+          description: Number of the flat
+          example: '12B'
+        floor:
+          type: integer
+          description: Floor number of the flat
+          example: 2
+        cadastralNumber:
+          type: string
+          description: Cadastral number of the flat
+          example: '123-456-789'
+        house:
+          $ref: '#/components/schemas/House'
+        owners:
+          type: array
+          description: List of owners of the flat
+          items:
+            $ref: '#/components/schemas/User'
+      required:
+        - number
+        - floor
+        - cadastralNumber
+        - house
+
+    SecretKey:
+      type: object
+      description: A secret key associated with a user
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the secret key
+          format: int64
+          example: 1
+        key:
+          type: string
+          description: The secret key value
+          example: 's3cr3tK3yV4lu3'
+        used:
+          type: boolean
+          description: Indicates whether the key has been used
+          example: false
+        usedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the key was used
+          nullable: true
+          example: '2024-01-01T12:00:00Z'
+        usedByEmail:
+          type: string
+          description: Email of the user who used the key
+          format: email
+          nullable: true
+      required:
+        - key
+        - used
+
+    FeedItem:
+      type: object
+      description: An item in the feed
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the feed item
+          format: int64
+          example: 1
+        title:
+          type: string
+          description: Title of the feed item
+          example: 'Important Update'
+        content:
+          type: string
+          description: Content of the feed item
+          example: 'This is an important update for all users.'
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the feed item was created
+          example: '2024-01-01T12:00:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the feed item was last updated
+          nullable: true
+          example: '2024-01-02T12:00:00Z'
+        author:
+          $ref: '#/components/schemas/User'
+        lastUpdater:
+          $ref: '#/components/schemas/User'
+          nullable: true
+      required:
+        - title
+        - content
+        - author
+      discriminator:
+        propertyName: post_type
+        mapping:
+          NEWS: '#/components/schemas/NewsPost'
+          EMERGENCY: '#/components/schemas/EmergencyPost'
+
+    NewsPost:
+      allOf:
+        - $ref: '#/components/schemas/FeedItem'
+        - type: object
+          properties:
+            attachment:
+              type: string
+              nullable: true
+            allowComments:
+              type: boolean
+            showInMainFeed:
+              type: boolean
+
+    EmergencyPost:
+      allOf:
+        - $ref: '#/components/schemas/FeedItem'
+        - type: object
+          required:
+            - severityLevel
+          properties:
+            severityLevel:
+              $ref: '#/components/schemas/SeverityLevel'
+            allowComments:
+              type: boolean
+
+    Ticket:
+      type: object
+      description: A support ticket in the system
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the ticket
+          format: int64
+          example: 1
+        status:
+          $ref: '#/components/schemas/TicketStatus'
+        theme:
+          $ref: '#/components/schemas/TicketTheme'
+        title:
+          type: string
+          description: Title of the ticket
+          example: 'Issue with heating'
+        description:
+          type: string
+          description: Description of the issue
+          example: 'The heating system is not working properly.'
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the ticket was created
+          nullable: true
+          example: '2024-01-01T12:00:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the ticket was last updated
+          nullable: true
+          example: '2024-01-02T12:00:00Z'
+        author:
+          $ref: '#/components/schemas/User'
+        assignedTo:
+          $ref: '#/components/schemas/User'
+          nullable: true
+        comments:
+          type: array
+          description: List of comments on the ticket
+          items:
+            $ref: '#/components/schemas/TicketComment'
+      required:
+        - title
+        - description
+        - createdBy
+
+    TicketComment:
+      type: object
+      description: A comment on a support ticket
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the ticket comment
+          format: int64
+          example: 1
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the comment was created
+          nullable: true
+          example: '2024-01-01T13:00:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the comment was last updated
+          nullable: true
+          example: '2024-01-02T13:00:00Z'
+        newStatus:
+          $ref: '#/components/schemas/TicketStatus'
+        text:
+          type: string
+          description: Text of the comment
+          example: 'We are looking into this issue.'
+        author:
+          $ref: '#/components/schemas/User'
+        ticket:
+          $ref: '#/components/schemas/Ticket'
+      required:
+        - newStatus
+        - text
+        - author
+
+    AuthRequest:
+      type: object
+      description: Authentication request payload
+      properties:
+        username:
+          type: string
+          description: User's email address or phone number
+          example: '+1234567890'
+        password:
+          type: string
+          description: User's password
+          example: 'securePassword123'
+      required:
+        - username
+        - password
+
+    AuthResponse:
+      type: object
+      description: Authentication response payload
+      properties:
+        accessToken:
+          type: string
+          description: JWT token for authenticated user
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+
+
+    UserRegisterRequest:
+      type: object
+      description: User registration request payload
+      properties:
+        phoneNumber:
+          type: string
+          description: User's phone number
+          uniqueItems: true
+          example: '+1234567890'
+        email:
+          type: string
+          description: User's email address
+          format: email
+          uniqueItems: true
+        password:
+          type: string
+          description: User's password
+          example: 'securePassword123'
+      required:
+        - phoneNumber
+        - password
+        - email
+
+    AdminRegisterRequest:
+      type: object
+      description: Admin registration request payload
+      properties:
+        phoneNumber:
+          type: string
+          description: Admin's phone number
+          uniqueItems: true
+          nullable: true
+          example: '+1234567890'
+        email:
+          type: string
+          description: Admin's email address
+          format: email
+          uniqueItems: true
+        password:
+          type: string
+          description: Admin's password
+          example: 'securePassword123'
+        secretKey:
+          type: string
+          description: Secret key for admin registration
+          example: 's3cr3tK3yV4lu3'
+      required:
+        - phoneNumber
+        - password
+        - email
+        - secretKey
+
+    Role:
+      type: String
+      description: Role of the user in the system
+      enum:
+        - USER
+        - TSJ
+        - ADMIN
+
+    Address:
+      type: object
+      properties:
+        city:
+          type: string
+        street:
+          type: string
+        houseNumber:
+          type: string
+        zipCode:
+          type: string
+          nullable: true
+      required:
+        - city
+        - street
+        - houseNumber
+
+    SeverityLevel:
+      type: String
+      description: Severity level of an emergency post
+      enum:
+        - LOW
+        - MEDIUM
+        - HIGH
+        - CRITICAL
+
+    TicketStatus:
+      type: String
+      description: Status of the ticket
+      enum:
+        - NEW
+        - IN_PROGRESS
+        - COMPLETED
+        - REJECTED
+
+    TicketTheme:
+      type: String
+      description: Theme of the ticket
+      enum:
+        - REPAIR
+        - COMPLAINT
+        - SUGGESTION
+        - MAINTENANCE
+        - BILLING
+        - OTHER
+
+    HouseDto:
+      type: object
+      description: Data Transfer Object for House
+      properties:
+        city:
+          type: string
+          example: "New York"
+        street:
+          type: string
+          example: "5th Avenue"
+        houseNumber:
+          type: string
+          example: "101"
+        zipCode:
+          type: String
+          example: "10001"
+        totalFloors:
+          type: integer
+          example: 10
+          minimum: 1
+      required:
+        - city
+        - street
+        - houseNumber
+
+    NewsPostDto:
+      type: object
+      description: Data Transfer Object for News Post
+      properties:
+        title:
+          type: string
+          example: "Community Meeting"
+        content:
+          type: string
+          example: "There will be a community meeting on Saturday."
+      required:
+        - title
+        - content
+
+    EmergencyPostDto:
+      type: object
+      description: Data Transfer Object for Emergency Post
+      properties:
+        title:
+          type: string
+          example: "Water Supply Interruption"
+        content:
+          type: string
+          example: "Water supply will be interrupted tomorrow from 9 AM to 5 PM."
+        severityLevel:
+          $ref: '#/components/schemas/SeverityLevel'
+      required:
+        - title
+        - content
+        - severityLevel
+
+    TicketDto:
+      type: object
+      description: Data Transfer Object for Ticket
+      properties:
+        theme:
+          $ref: '#/components/schemas/TicketTheme'
+        title:
+          type: string
+          example: "Heating Issue"
+        description:
+          type: string
+          example: "The heating system is not working properly."
+      required:
+        - theme
+        - title
+        - description
+
+
+    TicketCommentDto:
+      type: object
+      description: Data Transfer Object for Ticket Comment
+      properties:
+        newStatus:
+          $ref: '#/components/schemas/TicketStatus'
+        text:
+          type: string
+          example: "We are looking into this issue."
+      required:
+        - newStatus
+        - text
+
+
+  parameters:
+    id:
+      name: id
+      in: path
+      description: Unique identifier of the worker.
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+
+    authorization:
+      name: Authorization
+      in: header
+      description: Bearer token for authentication.
+      required: true
+      schema:
+        type: string
