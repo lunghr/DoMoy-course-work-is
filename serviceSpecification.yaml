@@ -1,0 +1,604 @@
+openapi: 3.1.0
+info:
+  title: DoMoy
+  description: API specification for the DoMoy application, which manages houses, flats, and users.
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8080/'
+tags:
+  - name: Authentication
+    description: Endpoints for user authentication and authorization
+  - name: Administration
+    description: Endpoints for administrative tasks
+  - name: News Feed
+    description: Endpoints for managing newsfeed posts
+  - name: Tickets
+    description: Endpoints for managing support tickets
+
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: User login
+      description: Authenticate a user and return a JWT token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'models.yaml#/components/schemas/AuthRequest'
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: 'models.yaml#/components/schemas/AuthResponse'
+        '400':
+          description: Invalid request payload
+        '500':
+          description: Internal server error
+
+  /auth/register-user:
+    post:
+      tags:
+        - Authentication
+      summary: User registration
+      description: Register a new user in the system.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'models.yaml#/components/schemas/UserRegisterRequest'
+      responses:
+        '201':
+          description: User successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: 'models.yaml#/components/schemas/AuthResponse'
+        '400':
+          description: Invalid request payload
+        '500':
+          description: Internal server error
+
+  /auth/register-admin:
+    post:
+      tags:
+        - Authentication
+      summary: Admin registration
+      description: Register a new admin user in the system.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'models.yaml#/components/schemas/AdminRegisterRequest'
+      responses:
+        '201':
+          description: Admin successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: 'models.yaml#/components/schemas/AuthResponse'
+        '400':
+          description: Invalid request payload
+        '500':
+          description: Internal server error
+
+  /auth/username:
+    get:
+      tags:
+        - Authentication
+      summary: Get current user username from token
+      description: Retrieve the username of the currently authenticated user using the provided JWT token.
+      parameters:
+        - $ref: 'models.yaml#/components/parameters/authorization'
+      responses:
+        '200':
+          description: Username availability status
+          content:
+            application/json:
+              schema:
+                type: string
+                description: The username of the currently authenticated user.
+        '400':
+          description: Invalid request parameters
+        '500':
+          description: Internal server error
+
+  /auth/role:
+    get:
+      tags:
+        - Authentication
+      summary: Get current user role from token
+      description: Retrieve the role of the currently authenticated user using the provided JWT token.
+      parameters:
+        - $ref: 'models.yaml#/components/parameters/authorization'
+      responses:
+        '200':
+          description: User role
+          content:
+            application/json:
+              schema:
+                type: string
+                description: The role of the currently authenticated user.
+        '400':
+          description: Invalid request parameters
+        '500':
+          description: Internal server error
+
+  /admin/houses:
+    post:
+      tags:
+        - Administration
+      summary: Create a new house
+      description: Create a new house in the system.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'models.yaml#/components/schemas/HouseDto'
+      responses:
+        '201':
+          description: House successfully created
+          content:
+            application/json:
+              schema:
+                type: String
+        '400':
+          description: Invalid request payload
+        '500':
+          description: Internal server error
+
+  /admin/houses/{id}:
+    get:
+      tags:
+        - Administration
+      summary: Get house by ID
+      description: Retrieve a house by its ID.
+      parameters:
+        - $ref: 'models.yaml#/components/parameters/id'
+      responses:
+        '200':
+          description: House details
+          content:
+            application/json:
+              schema:
+                $ref: 'models.yaml#/components/schemas/House'
+        '404':
+          description: House not found
+        '500':
+          description: Internal server error
+
+  /admin/houses/{id}/flats:
+    get:
+      tags:
+        - Administration
+      summary: Get flats by house ID
+      description: Retrieve all flats associated with a specific house ID.
+      parameters:
+        - $ref: 'models.yaml#/components/parameters/id'
+      responses:
+        '200':
+          description: List of flats
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'models.yaml#/components/schemas/Flat'
+        '404':
+          description: House not found
+        '500':
+          description: Internal server error
+
+  /admin/keys:
+    post:
+      tags:
+        - Administration
+      summary: Generate secret keys
+      description: Generate new access and secret keys for new admin registration.
+      responses:
+        '200':
+          description: Keys successfully generated
+          content:
+            application/json:
+              schema:
+                type: String
+        '500':
+          description: Internal server error
+
+  /admin/keys/available:
+    get:
+      tags:
+        - Administration
+      summary: Check all available keys
+      description: Retrieve all available access and secret keys.
+      responses:
+        '200':
+          description: Key availability status
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'models.yaml#/components/schemas/SecretKey'
+        '400':
+          description: Invalid request parameters
+        '500':
+          description: Internal server error
+
+  /newsfeed/news:
+    post:
+      tags:
+        - News Feed
+      summary: Create a newsfeed post
+      description: Create a new newsfeed post with an optional image upload.
+      parameters:
+        - $ref: 'models.yaml#/components/parameters/authorization'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - postDto
+              properties:
+                postDto:
+                  $ref: 'models.yaml#/components/schemas/NewsPostDto'
+                image:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Пост создан
+          content:
+            application/json:
+              schema:
+                $ref: 'models.yaml#/components/schemas/NewsPost'
+        '400':
+          description: Invalid request payload
+        '500':
+          description: Internal server error
+
+    get:
+      tags:
+        - News Feed
+      summary: Get all newsfeed posts
+      description: Retrieve all newsfeed posts.
+      responses:
+        '200':
+          description: List of newsfeed posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'models.yaml#/components/schemas/NewsPost'
+        '500':
+          description: Internal server error
+
+  /newsfeed/news/{id}:
+    get:
+      tags:
+        - News Feed
+      summary: Get newsfeed post by ID
+      description: Retrieve a newsfeed post by its ID.
+      parameters:
+        - $ref: 'models.yaml#/components/parameters/id'
+      responses:
+        '200':
+          description: Newsfeed post details
+          content:
+            application/json:
+              schema:
+                $ref: 'models.yaml#/components/schemas/NewsPost'
+        '404':
+          description: Newsfeed post not found
+        '500':
+          description: Internal server error
+
+    patch:
+      tags:
+        - News Feed
+      summary: Update newsfeed post by ID
+      description: Update a newsfeed post by its ID.
+      parameters:
+        - $ref: 'models.yaml#/components/parameters/id'
+        - $ref: 'models.yaml#/components/parameters/authorization'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - postDto
+              properties:
+                postDto:
+                  $ref: 'models.yaml#/components/schemas/NewsPostDto'
+                image:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Newsfeed post successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: 'models.yaml#/components/schemas/NewsPost'
+        '400':
+          description: Invalid request payload
+        '404':
+          description: Newsfeed post not found
+        '500':
+          description: Internal server error
+
+    delete:
+      tags:
+        - News Feed
+      summary: Delete newsfeed post by ID
+      description: Delete a newsfeed post by its ID.
+      parameters:
+        - $ref: 'models.yaml#/components/parameters/id'
+        - $ref: 'models.yaml#/components/parameters/authorization'
+      responses:
+        '204':
+          description: Newsfeed post successfully deleted
+        '404':
+          description: Newsfeed post not found
+        '500':
+          description: Internal server error
+
+
+  /newsfeed/emrgemcy:
+    post:
+      tags:
+        - News Feed
+      summary: Create an emergency newsfeed post
+      description: Create a new emergency newsfeed post with an optional image upload.
+      parameters:
+        - $ref: 'models.yaml#/components/parameters/authorization'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - postDto
+              properties:
+                postDto:
+                  $ref: 'models.yaml#/components/schemas/EmergencyPostDto'
+                image:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Emergency post created
+          content:
+            application/json:
+              schema:
+                $ref: 'models.yaml#/components/schemas/EmergencyPost'
+        '400':
+          description: Invalid request payload
+        '500':
+          description: Internal server error
+
+    get:
+      tags:
+        - News Feed
+      summary: Get all emergency newsfeed posts
+      description: Retrieve all emergency newsfeed posts.
+      responses:
+        '200':
+          description: List of emergency newsfeed posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'models.yaml#/components/schemas/EmergencyPost'
+        '500':
+          description: Internal server error
+
+  /newsfeed/emrgemcy/{id}:
+    get:
+      tags:
+        - News Feed
+      summary: Get emergency newsfeed post by ID
+      description: Retrieve an emergency newsfeed post by its ID.
+      parameters:
+        - $ref: 'models.yaml#/components/parameters/id'
+      responses:
+        '200':
+          description: Emergency post details
+          content:
+            application/json:
+              schema:
+                $ref: 'models.yaml#/components/schemas/EmergencyPost'
+        '404':
+          description: Emergency post not found
+        '500':
+          description: Internal server error
+
+    delete:
+      tags:
+        - News Feed
+      summary: Delete emergency newsfeed post by ID
+      description: Delete an emergency newsfeed post by its ID.
+      parameters:
+        - $ref: 'models.yaml#/components/parameters/id'
+        - $ref: 'models.yaml#/components/parameters/authorization'
+      responses:
+        '204':
+          description: Emergency post successfully deleted
+        '404':
+          description: Emergency post not found
+        '500':
+          description: Internal server error
+
+  /newsfeed:
+    get:
+      tags:
+        - News Feed
+      summary: Get combined newsfeed posts
+      description: Retrieve a combined list of regular and emergency newsfeed posts, sorted by date.
+      responses:
+        '200':
+          description: Combined list of newsfeed posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                    - $ref: 'models.yaml#/components/schemas/NewsPost'
+                    - $ref: 'models.yaml#/components/schemas/EmergencyPost'
+        '500':
+          description: Internal server error
+
+  /tickets:
+    post:
+      tags:
+        - Tickets
+      summary: Create a support ticket
+      description: Create a new support ticket.
+      parameters:
+        - $ref: 'models.yaml#/components/parameters/authorization'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'models.yaml#/components/schemas/TicketDto'
+      responses:
+        '201':
+          description: Ticket successfully created
+          content:
+            application/json:
+              schema:
+                $ref: 'models.yaml#/components/schemas/Ticket'
+        '400':
+          description: Invalid request payload
+        '500':
+          description: Internal server error
+
+    get:
+      tags:
+        - Tickets
+      summary: Get all support tickets
+      description: Retrieve all support tickets.
+      parameters:
+        - $ref: 'models.yaml#/components/parameters/authorization'
+      responses:
+        '200':
+          description: List of support tickets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'models.yaml#/components/schemas/Ticket'
+        '500':
+          description: Internal server error
+
+  /tickets/{id}:
+    get:
+      tags:
+        - Tickets
+      summary: Get support ticket by ID
+      description: Retrieve a support ticket by its ID.
+      parameters:
+        - $ref: 'models.yaml#/components/parameters/id'
+      responses:
+        '200':
+          description: Support ticket details
+          content:
+            application/json:
+              schema:
+                $ref: 'models.yaml#/components/schemas/Ticket'
+        '404':
+          description: Support ticket not found
+        '500':
+          description: Internal server error
+
+  /ticket/{id}/comments:
+    post:
+      tags:
+        - Tickets
+      summary: Add comment to support ticket
+      description: Add a comment to a support ticket by its ID.
+      parameters:
+        - $ref: 'models.yaml#/components/parameters/id'
+        - $ref: 'models.yaml#/components/parameters/authorization'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'models.yaml#/components/schemas/TicketCommentDto'
+      responses:
+        '201':
+          description: Comment successfully added
+          content:
+            application/json:
+              schema:
+                $ref: 'models.yaml#/components/schemas/TicketComment'
+        '400':
+          description: Invalid request payload
+        '500':
+          description: Internal server error
+
+    get:
+      tags:
+        - Tickets
+      summary: Get comments for support ticket
+      description: Retrieve all comments for a support ticket by its ID.
+      parameters:
+        - $ref: 'models.yaml#/components/parameters/id'
+      responses:
+        '200':
+          description: List of comments for the support ticket
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'models.yaml#/components/schemas/TicketComment'
+        '500':
+          description: Internal server error
+
+  /ticket/users/{id}:
+    get:
+      tags:
+        - Tickets
+      summary: Get tickets by user ID
+      description: Retrieve all support tickets created by a specific user ID.
+      parameters:
+        - $ref: 'models.yaml#/components/parameters/id'
+      responses:
+        '200':
+          description: List of support tickets for the user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'models.yaml#/components/schemas/Ticket'
+        '500':
+          description: Internal server error
+
+
+
+
+
+
+
+  
+  

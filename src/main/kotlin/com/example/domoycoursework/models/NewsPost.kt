@@ -2,7 +2,6 @@ package com.example.domoycoursework.models
 
 import jakarta.persistence.DiscriminatorValue
 import jakarta.persistence.Entity
-import org.springframework.web.multipart.MultipartFile
 
 
 @Entity

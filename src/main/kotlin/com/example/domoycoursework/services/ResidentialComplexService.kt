@@ -59,7 +59,7 @@ class ResidentialComplexService(
         }
 
         val flat = Flat(
-            flatNumber = flatNumber,
+            number = flatNumber,
             floor = floor,
             cadastralNumber = cadastralNumber?.trim(),
             house = house
