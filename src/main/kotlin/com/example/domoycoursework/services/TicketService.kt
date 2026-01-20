@@ -45,6 +45,11 @@ class TicketService(
         if (ticket.status == TicketStatus.COMPLETED || ticket.status == TicketStatus.REJECTED) {
             throw NoPermissionException("Ticket is already completed or rejected")
         }
+
+        if (admin.role.name != "ADMIN") {
+            throw NoPermissionException("Only admins can respond to tickets")
+        }
+
         ticket.status = TicketStatus.valueOf(ticketCommentDto.newStatus)
         ticket.assignedTo = admin
         ticketRepository.save(ticket)

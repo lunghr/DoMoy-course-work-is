@@ -1,6 +1,8 @@
 package com.example.domoycoursework.dto
 
-class PostDto (
+
+data class EmergencyPostDto(
     var title: String,
     var content: String,
+    var severityLevel: String
 )
