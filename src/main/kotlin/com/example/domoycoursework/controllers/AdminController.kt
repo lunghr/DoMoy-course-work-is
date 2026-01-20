@@ -38,15 +38,6 @@ class AdminController(
         return residentialComplexService.getFlatsByHouse(id)
     }
 
-
-//    @PostMapping("/emergency-notification/create")
-//    fun createEmergencyNotification(
-//        @RequestBody emergencyNotificationDto: EmergencyNotificationDto,
-//        @RequestHeader("Authorization") token: String
-//    ): EmergencyPost {
-//        return emergencyNotificationService.createEmergencyNotification(emergencyNotificationDto, token)
-//    }
-
     @PostMapping("/key")
     fun createKey() {
         secretKeyService.createSecretKey()
