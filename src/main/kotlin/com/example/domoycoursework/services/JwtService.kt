@@ -1,7 +1,7 @@
 package com.example.domoycoursework.services
 
-import com.example.domoycoursework.models.Admin
 import com.example.domoycoursework.models.User
+import io.github.cdimascio.dotenv.Dotenv
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.io.Decoders
@@ -14,23 +14,16 @@ import kotlin.collections.HashMap
 
 @Service
 class JwtService {
-    private var secret: String = "53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855"
+    private var dotenv = Dotenv.load()
+    private var secret = dotenv["SECRET"]
 
     fun generateToken(userDetails: UserDetails): String {
-        val claims = HashMap<String, Any>()
+        val claims = HashMap<String, Any?>()
         if (userDetails is User) {
-            val customUserDetails = userDetails
-            claims["id"] = customUserDetails.id ?: 0
-            claims["email"] = customUserDetails.email
-            claims["role"] = customUserDetails.role
+            claims["id"] = userDetails.id
+            claims["email"] = userDetails.email
+            claims["role"] = userDetails.role
         }
-        if (userDetails is Admin){
-            val customUserDetails = userDetails
-            claims["id"] = customUserDetails.id ?: 0
-            claims["email"] = customUserDetails.email
-            claims["role"] = customUserDetails.role
-        }
-        println("Token generated")
         return Jwts.builder()
             .subject(userDetails.username)
             .claims(claims)
@@ -46,7 +39,6 @@ class JwtService {
             return SecretKeySpec(keyBytes, 0, keyBytes.size, "HmacSHA256")
         }
 
-    // TODO: Try to escape deprecated methods but i really dk how to do it
     fun <T> getClaim(token: String, resolver: (Claims) -> T): T =
         Jwts.parser()
             .setSigningKey(signingKey)
@@ -56,6 +48,8 @@ class JwtService {
             .let(resolver)
 
     fun getUsername(token: String): String = getClaim(token) { it.subject }
+
+    fun getUserId(token: String): Long = getClaim(token) { (it["id"] as Long) }
 
     fun getRole(token: String): String = getClaim(token) { it["role"] as String }
 

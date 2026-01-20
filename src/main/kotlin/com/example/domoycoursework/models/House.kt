@@ -19,16 +19,12 @@ import jakarta.persistence.Table
 class House(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+    val id: Long? = null,
 
     @Embedded
     var address: Address,
 
     var totalFloors: Int,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="complex_id")
-    var complex: ResidentialComplex? = null,
 
     @OneToMany(mappedBy = "house", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var flats: MutableList<Flat> = mutableListOf()

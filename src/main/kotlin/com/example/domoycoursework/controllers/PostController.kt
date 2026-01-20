@@ -1,49 +1,85 @@
 package com.example.domoycoursework.controllers
 
-import com.example.domoycoursework.dto.PostDto
-import com.example.domoycoursework.models.Post
+import com.example.domoycoursework.dto.EmergencyPostDto
+import com.example.domoycoursework.dto.NewsPostDto
+import com.example.domoycoursework.models.EmergencyPost
+import com.example.domoycoursework.models.FeedItem
+import com.example.domoycoursework.models.NewsPost
 import com.example.domoycoursework.services.PostService
-import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 
 
 @RestController
-@RequestMapping("/posts")
+@RequestMapping("/post")
 @CrossOrigin(origins = ["*"])
-@Tag(name = "Posts")
 class PostController(
     private var postService: PostService
 ) {
 
-    @PostMapping("/create")
-    fun createPost(@RequestHeader("Authorization") token: String, @RequestPart("postDto") @Valid postDto: String, @RequestPart("image", required = false) image: MultipartFile? ): Post {
-        return postService.createPost(postService.convertToDto(postDto), token, image)
+    @PostMapping("/news")
+    fun createPost(
+        @RequestHeader("Authorization") token: String,
+        @RequestPart("postDto") @Valid dto: NewsPostDto,
+        @RequestPart("image", required = false) image: MultipartFile?
+    ): NewsPost {
+        return postService.createNewsPost(dto, token, image)
     }
 
-    @PostMapping("/update/{id}")
-    fun updatePost(@RequestHeader("Authorization") token: String, @PathVariable id: Int, @RequestPart @Valid postDto: String, @RequestPart("image", required = false) image: MultipartFile? ): Post {
-        return postService.updatePost(id,postService.convertToDto(postDto), token, image)
+    @PostMapping("/emergency")
+    fun createEmergencyPost(
+        @RequestHeader("Authorization") token: String,
+        @RequestPart("postDto") @Valid dto: EmergencyPostDto
+    ): EmergencyPost {
+        return postService.createEmergencyPost(dto, token)
     }
 
-    @DeleteMapping("/delete/{id}")
-    fun deletePost(@RequestHeader("Authorization") token: String, @PathVariable id: Int) {
+    @GetMapping("/news")
+    fun getAllNewsPosts(): List<NewsPost> {
+        return postService.getAllNewsPosts()
+    }
+
+    @GetMapping("/emergency")
+    fun getAllEmergencyPosts(): List<EmergencyPost> {
+        return postService.getAllEmergencyPosts()
+    }
+
+    @PatchMapping("/news/{id}")
+    fun updatePost(
+        @RequestHeader("Authorization") token: String,
+        @PathVariable id: Long,
+        @RequestPart("postDto") @Valid dto: NewsPostDto,
+        @RequestPart("image", required = false) image: MultipartFile?
+    ): NewsPost {
+        return postService.updateNewsPost(id, dto, token, image)
+    }
+
+    @DeleteMapping("/news/{id}")
+    fun deletePost(@RequestHeader("Authorization") token: String, @PathVariable id: Long) {
         postService.deletePost(id, token)
     }
 
-    @GetMapping("/all")
-    fun getAllPosts(): List<Post> {
-        return postService.getAllPosts()
+    @DeleteMapping("/emergency/{id}")
+    fun deleteEmergencyPost(
+        @RequestHeader("Authorization") token: String, @PathVariable id
+        : Long
+    ) {
+        postService.deleteEmergencyPost(id, token)
+    }
+
+    @GetMapping()
+    fun getNewsFeed(): List<FeedItem> {
+        return postService.getNewsFeed()
     }
 
     @GetMapping("/image/{filename}")

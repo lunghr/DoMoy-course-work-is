@@ -34,7 +34,7 @@ dependencies {
     implementation("io.minio:minio:8.5.17")
     implementation("org.apache.poi:poi-ooxml:5.4.0")
     implementation("io.github.cdimascio:dotenv-kotlin:6.5.1")
-    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+//    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 }
 
 kotlin {
